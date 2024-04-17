@@ -204,19 +204,19 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener,  
 		livesTF.setText(keyText + " pressed.");
 
 		if (keyCode == KeyEvent.VK_LEFT) {
-			gamePanel.updateBat (1);
+			gamePanel.updatePlayer (1);
 		}
 
 		if (keyCode == KeyEvent.VK_RIGHT) {
-			gamePanel.updateBat (2);
+			gamePanel.updatePlayer (2);
 		}
 
 		if (keyCode == KeyEvent.VK_UP) {
-			gamePanel.updateBat (3);
+			gamePanel.updatePlayer(3);
 		}
 
 		if (keyCode == KeyEvent.VK_DOWN) {
-			gamePanel.updateBat (4);
+			gamePanel.updatePlayer(4);
 		}
 	}
 

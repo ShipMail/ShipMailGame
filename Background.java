@@ -12,7 +12,6 @@ public class Background {
 	private int panelWidth, panelHeight;
 
  	private int bgX;			// X-coordinate of "actual" position
-
 	private int bg1X;			// X-coordinate of first background
 	private int bg2X;			// X-coordinate of second background
 	private int bgDX;			// size of the background move (in pixels)

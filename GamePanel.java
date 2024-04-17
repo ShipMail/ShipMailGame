@@ -8,45 +8,53 @@ import java.awt.Graphics2D;
    A component that displays all the game entities
 */
 
-public class GamePanel extends JPanel
-		       implements Runnable {
+public class GamePanel extends JPanel  implements Runnable {
    
-	private static int NUM_ALIENS = 3;
-	//private SoundManager soundManager;
+	
+	private SoundManager soundManager;
 	private Ship ship;
 	private NinjaRollAnimation ninjaRoll;
 
 	private boolean isRunning;
 	private boolean isPaused;
-
 	private Thread gameThread;
-
 	private BufferedImage image;
-
 	public Background background;
+	public Background background2;
 
+	private int level;
 	private int width;
 	private int height;
 
 	public GamePanel () {
-		//ship = null;
+		
 		isRunning = false;
 		isPaused = false;
-		//soundManager = SoundManager.getInstance();
-		width = 826;
-		height = 465;
+		soundManager = SoundManager.getInstance();
+
+		//Sprite Declarations
+		ship = null;
+
+		//Panel Dimensions
+		width = 900;
+		height = 500;
 
 
+		gameThread = null;
+		level = 1;
 		image = new BufferedImage (width, height, BufferedImage.TYPE_INT_RGB);
 	}
 
 
 	public void createGameEntities() {
 		background = new Background(this, "images/ocean.png", 96);
-
+		background2 = new Background(this, "images/Suburbs.jpeg", 110);
 		ship = new Ship(this, 10, 5);
+		/* 
 		ninjaRoll = new NinjaRollAnimation();
 		ninjaRoll.start();
+
+		*/
 	}
 
 
@@ -66,36 +74,45 @@ public class GamePanel extends JPanel
 
 	public void gameUpdate() {
 		ship.move();
-		ninjaRoll.update();
+		//ninjaRoll.update();
 	}
 
 
-	public void updateBat (int direction) {
+	public void updatePlayer (int direction) {
 
-		if (isPaused)
+		/*if (isPaused)
 			return;
 
-		ninjaRoll.move(direction);
+		ninjaRoll.move(direction);*/
+
+		if (background != null) {
+			background.move(direction);
+		}
+
 
 	}
 
 
 	public void gameRender() {
 
-		// draw the game objects on the image
-
+		//Draws Game objects
 		Graphics2D imageContext = (Graphics2D) image.getGraphics();
-
+		if(level == 1){
 		background.draw(imageContext);
-
-		if (ship != null) {
-			ship.draw(imageContext);
+			if (ship != null) {
+				ship.draw(imageContext);
+			}
+	}
+		
+		else if(level == 2){
+			background2.draw(imageContext);
 		}
 
 
+		/* 
 		if(ninjaRoll != null){
 		   ninjaRoll.draw(imageContext);
-		}
+		}*/
 
 		Graphics2D g2 = (Graphics2D) getGraphics();	// get the graphics context for the panel
 		g2.drawImage(image, 0, 0, width, height, null);
@@ -104,23 +121,29 @@ public class GamePanel extends JPanel
 		g2.dispose();
 	}
 
+	public void changelevel(){
+		if(level == 1){
+			level = 2;
+		}
+		else if(level == 2){
+			level = 1;
+		}
+	}
 
-	public void startGame() {				// initialise and start the game thread 
-
+	public void startGame() {				
 		if (gameThread == null) {
 			//soundManager.playClip ("background", true);
 			createGameEntities();
 			gameThread = new Thread (this);			
 			gameThread.start();
 		}
-
+         
 	}
 
 
-	public void startNewGame() {				// initialise and start a new game thread 
 
+	public void startNewGame() {			
 		isPaused = false;
-
 		if (gameThread == null || !isRunning) {
 			//soundManager.playClip ("background", true);
 			createGameEntities();
@@ -130,7 +153,7 @@ public class GamePanel extends JPanel
 	}
 
 
-	public void pauseGame() {				// pause the game (don't update game entities)
+	public void pauseGame() {				
 		if (isRunning) {
 			if (isPaused)
 				isPaused = false;
@@ -140,7 +163,7 @@ public class GamePanel extends JPanel
 	}
 
 
-	public void endGame() {					// end the game thread
+	public void endGame() {				
 		isRunning = false;
 		//soundManager.stopClip ("background");
 	}
