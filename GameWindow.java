@@ -202,32 +202,34 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener, M
 		String keyText = e.getKeyText(keyCode);
 		livesTF.setText(keyText + " pressed.");
 
-		if (keyCode == KeyEvent.VK_LEFT) {
-			gamePanel.updatePlayer (1);
-		}
-
-		if (keyCode == KeyEvent.VK_RIGHT) {
-			gamePanel.updatePlayer (2);
-		}
-
-		if (keyCode == KeyEvent.VK_UP) {
-			gamePanel.updatePlayer (3);
-		}
-
-		if (keyCode == KeyEvent.VK_DOWN) {
-			gamePanel.updatePlayer (4);
-		}
-
-		if (keyCode == KeyEvent.VK_K) {
-			gamePanel.updatePlayer (5);
-		}
-
-		if (keyCode == KeyEvent.VK_C) {
-			gamePanel.updatePlayer (6);
-		}
-
-		if (keyCode == KeyEvent.VK_S) {
-			gamePanel.updatePlayer (7);
+		if(gamePanel.getLevel() == 1) {
+			if (keyCode == KeyEvent.VK_LEFT) {
+				gamePanel.updatePlayer (1);
+			}
+	
+			if (keyCode == KeyEvent.VK_RIGHT) {
+				gamePanel.updatePlayer (2);
+			}
+	
+			if (keyCode == KeyEvent.VK_UP) {
+				gamePanel.updatePlayer (3);
+			}
+	
+			if (keyCode == KeyEvent.VK_DOWN) {
+				gamePanel.updatePlayer (4);
+			}
+	
+			if (keyCode == KeyEvent.VK_K) {
+				gamePanel.updatePlayer (5);
+			}
+	
+			if (keyCode == KeyEvent.VK_C) {
+				gamePanel.updatePlayer (6);
+			}
+	
+			if (keyCode == KeyEvent.VK_S) {
+				gamePanel.updatePlayer (7);
+			}
 		}
 	}
 
