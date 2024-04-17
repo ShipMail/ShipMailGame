@@ -2,27 +2,19 @@ import javax.swing.*;			// need this for GUI objects
 import java.awt.*;			// need this for Layout Managers
 import java.awt.event.*;		// need this to respond to GUI events
 	
-public class GameWindow extends JFrame 
-				implements ActionListener,
-					   KeyListener,
-					   MouseListener
+public class GameWindow extends JFrame implements ActionListener, KeyListener, MouseListener
 {
-	// declare instance variables for user interface objects
-
-	// declare labels 
-
-	private JLabel statusBarL;
-	private JLabel keyL;
+	//Label Declaration
+	private JLabel score;
+	private JLabel lives;
 	private JLabel mouseL;
-
-	// declare text fields
-
-	private JTextField statusBarTF;
-	private JTextField keyTF;
+	
+	//TextField Declaration
+	private JTextField scoreTF;
+	private JTextField livesTF;
 	private JTextField mouseTF;
 
-	// declare buttons
-
+	//Button Declaration
 	private JButton startB;
 	private JButton pauseB;
 	private JButton endB;
@@ -30,59 +22,66 @@ public class GameWindow extends JFrame
 	private JButton focusB;
 	private JButton exitB;
 
-	private Container c;
+	
+    //Panels
+    private JPanel mainPanel;
+    private JPanel buttonPanel;
+    private JPanel informationPanel;
+    private GamePanel gamePanel;
 
-	private JPanel mainPanel;
-	private GamePanel gamePanel;
+	private Container window;
+	public Color color;
 
 	@SuppressWarnings({"unchecked"})
 	public GameWindow() {
  
-		setTitle ("A Game With Aliens, Image Effects, and Animations");
+		setTitle ("Mail Ninja: Sea & Surburban ");
 		setSize (1000, 750);
+		setLocationRelativeTo(null);
+		setResizable(true);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		// create user interface objects
-
-		// create labels
-
-		statusBarL = new JLabel ("Application Status: ");
-		keyL = new JLabel("Key Pressed: ");
+		
+		//Initialize Labels
+		score = new JLabel ("Score: ");
+		lives = new JLabel("Lives: ");
 		mouseL = new JLabel("Location of Mouse Click: ");
 
-		// create text fields and set their colour, etc.
+		//Initialize TextFields
+		scoreTF = new JTextField (25);
+		scoreTF.setEditable(false);
+		scoreTF.setBackground(Color.WHITE);
 
-		statusBarTF = new JTextField (25);
-		keyTF = new JTextField (25);
+		livesTF = new JTextField (25);
+		livesTF.setEditable(false);
+		livesTF.setBackground(Color.WHITE);
+
 		mouseTF = new JTextField (25);
-
-		statusBarTF.setEditable(false);
-		keyTF.setEditable(false);
 		mouseTF.setEditable(false);
+		mouseTF.setBackground(Color.WHITE);
 
-		statusBarTF.setBackground(Color.CYAN);
-		keyTF.setBackground(Color.YELLOW);
-		mouseTF.setBackground(Color.GREEN);
-
-		// create buttons
-
+		//Intialize Buttons
 	        startB = new JButton ("Start Game");
 	        pauseB = new JButton ("Pause Game");
 	        endB = new JButton ("End Game");
-		startNewB = new JButton ("Start New Game");
-	        focusB = new JButton ("Shoot Cat");
-		exitB = new JButton ("Exit");
+			startNewB = new JButton ("Start New Game");
+	        focusB = new JButton ("Focus");
+			exitB = new JButton ("Exit");
 
 
-		// add listener to each button (same as the current object)
+				//Add Listeners to Buttons
+					startB.addActionListener(this);
+					pauseB.addActionListener(this);
+					endB.addActionListener(this);
+					startNewB.addActionListener(this);
+					focusB.addActionListener(this);
+					exitB.addActionListener(this);
 
-		startB.addActionListener(this);
-		pauseB.addActionListener(this);
-		endB.addActionListener(this);
-		startNewB.addActionListener(this);
-		focusB.addActionListener(this);
-		exitB.addActionListener(this);
+
+
+
 		
-		// create mainPanel
+	// ~~~~~~~~~~~~~~~ Creating Panels ~~~~~~~~~~~~~~~~~~~~
 
 		mainPanel = new JPanel();
 		FlowLayout flowLayout = new FlowLayout();
@@ -90,73 +89,73 @@ public class GameWindow extends JFrame
 
 		GridLayout gridLayout;
 
-		// create the gamePanel for game entities
+	//Information Panel
+	informationPanel = new JPanel();
+	gridLayout = new GridLayout(3, 2);
+	informationPanel.setLayout(gridLayout);
 
-		gamePanel = new GamePanel();
-        gamePanel.setPreferredSize(new Dimension(826, 465));
-
-		// create infoPanel
-
-		JPanel infoPanel = new JPanel();
-		gridLayout = new GridLayout(3, 2);
-		infoPanel.setLayout(gridLayout);
-		infoPanel.setBackground(Color.ORANGE);
-
-		// add user interface objects to infoPanel
 	
-		infoPanel.add (statusBarL);
-		infoPanel.add (statusBarTF);
+			// Information Panel Components
+			informationPanel.add (score);
+			informationPanel.add (scoreTF);
+	
+			informationPanel.add (lives);
+			informationPanel.add (livesTF);		
+	
+			informationPanel.add (mouseL);
+			informationPanel.add (mouseTF);
+	
+	color = new Color(219, 169, 121);
+	informationPanel.setBackground(color);
 
-		infoPanel.add (keyL);
-		infoPanel.add (keyTF);		
 
-		infoPanel.add (mouseL);
-		infoPanel.add (mouseTF);
+	//Game Panel
+		gamePanel = new GamePanel();
+		color = new Color(232, 239, 207);
+		gamePanel.setBackground(color);
+        gamePanel.setPreferredSize(new Dimension(900, 500));
+
 
 		
-		// create buttonPanel
+	//Button Panel
+	buttonPanel = new JPanel();
+	gridLayout = new GridLayout(2, 3);
+	buttonPanel.setLayout(gridLayout);
 
-		JPanel buttonPanel = new JPanel();
-		gridLayout = new GridLayout(2, 3);
-		buttonPanel.setLayout(gridLayout);
+				// Button Panel Components
+					buttonPanel.add (startB);
+					buttonPanel.add (pauseB);
+					buttonPanel.add (endB);
+					buttonPanel.add (startNewB);
+					buttonPanel.add (focusB);
+					buttonPanel.add (exitB);
 
-		// add buttons to buttonPanel
+		
+	//Decorate Main Panel
+	mainPanel.add(informationPanel);
+	mainPanel.add(gamePanel);
+	mainPanel.add(buttonPanel);
+	color = new Color(236, 202, 156);
+	mainPanel.setBackground(color);
 
-		buttonPanel.add (startB);
-		buttonPanel.add (pauseB);
-		buttonPanel.add (endB);
-		buttonPanel.add (startNewB);
-		buttonPanel.add (focusB);
-		buttonPanel.add (exitB);
-
-		// add sub-panels with GUI objects to mainPanel and set its colour
-
-		mainPanel.add(infoPanel);
-		mainPanel.add(gamePanel);
-		mainPanel.add(buttonPanel);
-		mainPanel.setBackground(Color.PINK);
-
-		// set up mainPanel to respond to keyboard and mouse
-
+		//Add Action Listeners
 		gamePanel.addMouseListener(this);
 		mainPanel.addKeyListener(this);
 
-		// add mainPanel to window surface
+	
 
-		c = getContentPane();
-		c.add(mainPanel);
+	//Add Main Panel to Window Surface
+	window = getContentPane();
+	window.add(mainPanel);
 
-		// set properties of window
+	//Set Window Properties P2
+	 setVisible(true);
 
-		setResizable(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		setVisible(true);
-
-		// set status bar message
-
-		statusBarTF.setText("Application started.");
+		
+	//Set Score-Bar message
+		scoreTF.setText("0");
 	}
+
 
 
 	// implement single method in ActionListener interface
@@ -164,8 +163,7 @@ public class GameWindow extends JFrame
 	public void actionPerformed(ActionEvent e) {
 
 		String command = e.getActionCommand();
-		
-		statusBarTF.setText(command + " button clicked.");
+		scoreTF.setText(command + " button clicked.");
 
 		if (command.equals(startB.getText())) {
 			gamePanel.startGame();
@@ -202,22 +200,34 @@ public class GameWindow extends JFrame
 	public void keyPressed(KeyEvent e) {
 		int keyCode = e.getKeyCode();
 		String keyText = e.getKeyText(keyCode);
-		keyTF.setText(keyText + " pressed.");
+		livesTF.setText(keyText + " pressed.");
 
 		if (keyCode == KeyEvent.VK_LEFT) {
-			gamePanel.updateBat (1);
+			gamePanel.updatePlayer (1);
 		}
 
 		if (keyCode == KeyEvent.VK_RIGHT) {
-			gamePanel.updateBat (2);
+			gamePanel.updatePlayer (2);
 		}
 
 		if (keyCode == KeyEvent.VK_UP) {
-			gamePanel.updateBat (3);
+			gamePanel.updatePlayer (3);
 		}
 
 		if (keyCode == KeyEvent.VK_DOWN) {
-			gamePanel.updateBat (4);
+			gamePanel.updatePlayer (4);
+		}
+
+		if (keyCode == KeyEvent.VK_K) {
+			gamePanel.updatePlayer (5);
+		}
+
+		if (keyCode == KeyEvent.VK_C) {
+			gamePanel.updatePlayer (6);
+		}
+
+		if (keyCode == KeyEvent.VK_S) {
+			gamePanel.updatePlayer (7);
 		}
 	}
 

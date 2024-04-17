@@ -36,7 +36,7 @@ public class Ship {
         dimension = panel.getSize();
         backgroundColour = panel.getBackground ();
   
-        width = 800;
+        width = 900;
         height = 500;
 
         x = xPos;
@@ -45,7 +45,7 @@ public class Ship {
         dx = 5;	
         dy = 0;			
   
-        shipImage = ImageManager.loadImage ("images/ship.png");
+        shipImage = ImageManager.loadImage ("images/pirate-ship.png");
         b = panel.background;
      }
 

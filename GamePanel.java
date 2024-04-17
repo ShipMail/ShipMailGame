@@ -3,6 +3,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.Random;
 
 /**
    A component that displays all the game entities
@@ -11,42 +12,69 @@ import java.awt.Graphics2D;
 public class GamePanel extends JPanel
 		       implements Runnable {
    
-	private static int NUM_ALIENS = 3;
-	//private SoundManager soundManager;
+	
+	private SoundManager soundManager;
 	private Ship ship;
-	private NinjaRollAnimation ninjaRoll;
 
 	private boolean isRunning;
 	private boolean isPaused;
-
 	private Thread gameThread;
-
 	private BufferedImage image;
-
 	public Background background;
+	public Background background2;
 
+	private int level;
 	private int width;
 	private int height;
 
+	private NinjaAnimationManager ninja;
+	private PirateAnimationManager[] pirates;
+	private LootManager loot1;
+	private LootManager loot2;
+	private Package[] packages;
+
+	private Random random;
+
+
 	public GamePanel () {
-		//ship = null;
 		isRunning = false;
 		isPaused = false;
-		//soundManager = SoundManager.getInstance();
-		width = 826;
-		height = 465;
+		soundManager = SoundManager.getInstance();
 
+		//Sprite Declarations
+		ship = null;
 
+		//Panel Dimensions
+		width = 900;
+		height = 500;
+
+		gameThread = null;
+		level = 1;
+	
+		random = new Random();
+        
 		image = new BufferedImage (width, height, BufferedImage.TYPE_INT_RGB);
 	}
 
 
 	public void createGameEntities() {
-		background = new Background(this, "images/ocean.png", 96);
+		background = new Background(this, "images/beach.jpg", 96);
+		background2 = new Background(this, "images/Suburbs.jpeg", 110);
 
-		ship = new Ship(this, 10, 5);
-		ninjaRoll = new NinjaRollAnimation();
-		ninjaRoll.start();
+		ship = new Ship(this, 0, 0);
+		ninja = new NinjaAnimationManager(this);
+		
+		loot1 = new LootManager(random.nextInt(0, 850), random.nextInt(350, 450), ninja);
+		loot2 = new LootManager(random.nextInt(0, 850), random.nextInt(350, 450), ninja);
+
+		pirates = new PirateAnimationManager[2];
+		pirates[0] = new PirateAnimationManager(this, random.nextInt(300, 450), random.nextInt(300, 400), "right", ninja, loot1);
+		pirates[1] = new PirateAnimationManager(this, random.nextInt(300, 450), random.nextInt(300, 400), "left", ninja, loot2);
+
+		packages = new Package[3];
+		packages[0] = new Package(this, random.nextInt(100, 600), random.nextInt(300, 400), pirates, ninja);
+		packages[1] = new Package(this, random.nextInt(100, 600), random.nextInt(300, 400), pirates, ninja);
+		packages[2] = new Package(this, random.nextInt(100, 600), random.nextInt(300, 400), pirates, ninja);
 	}
 
 
@@ -66,17 +94,29 @@ public class GamePanel extends JPanel
 
 	public void gameUpdate() {
 		ship.move();
-		ninjaRoll.update();
+		ninja.update();
+
+		for(int i=0; i < pirates.length; i++)
+			pirates[i].update();
+		
+		for(int i=0; i < packages.length; i++)
+			packages[i].update();
 	}
 
 
-	public void updateBat (int direction) {
+	public void updatePlayer (int direction) {
 
 		if (isPaused)
 			return;
 
-		ninjaRoll.move(direction);
+		if(level == 1)
+			ninja.move(direction);
 
+		else if(level == 2){
+			if (background != null) {
+				background.move(direction);
+			}
+		}
 	}
 
 
@@ -86,22 +126,57 @@ public class GamePanel extends JPanel
 
 		Graphics2D imageContext = (Graphics2D) image.getGraphics();
 
-		background.draw(imageContext);
+		if(level == 1){
+			background.draw(imageContext);
 
-		if (ship != null) {
-			ship.draw(imageContext);
+			if (ship != null) {
+				ship.draw(imageContext);
+			}
+
+			if(ninja != null){
+			ninja.draw(imageContext);
+			}
+
+			for(int i=0; i < pirates.length; i++){
+				if(pirates[i] != null){
+					pirates[i].draw(imageContext);
+				}
+			}
+
+
+			if(ninja.isDead()){
+				for(int i=0; i < packages.length; i++)
+					packages[i].draw(imageContext); //packages for pirates to steal
+			}
+
+			//end game when pirates steal all packages or ninja collects all loot
+			if(allPackagesStolen())
+				endGame();
+
+			if(allLootCollected())
+				endGame();
 		}
-
-
-		if(ninjaRoll != null){
-		   ninjaRoll.draw(imageContext);
+		
+		else if(level == 2){
+			background2.draw(imageContext);
 		}
+		
 
 		Graphics2D g2 = (Graphics2D) getGraphics();	// get the graphics context for the panel
 		g2.drawImage(image, 0, 0, width, height, null);
 
 		imageContext.dispose();
 		g2.dispose();
+	}
+
+
+	public void changelevel(){
+		if(level == 1){
+			level = 2;
+		}
+		else if(level == 2){
+			level = 1;
+		}
 	}
 
 
@@ -112,6 +187,14 @@ public class GamePanel extends JPanel
 			createGameEntities();
 			gameThread = new Thread (this);			
 			gameThread.start();
+		}
+
+		if(level == 1){
+			for(int i=0; i < pirates.length; i++){
+				if(pirates[i] != null){
+					pirates[i].start();
+				}
+			}
 		}
 
 	}
@@ -126,6 +209,14 @@ public class GamePanel extends JPanel
 			createGameEntities();
 			gameThread = new Thread (this);			
 			gameThread.start();
+		}
+
+		if(level == 1){
+			for(int i=0; i < pirates.length; i++){
+				if(pirates[i] != null){
+					pirates[i].start();
+				}
+			}
 		}
 	}
 
@@ -143,5 +234,20 @@ public class GamePanel extends JPanel
 	public void endGame() {					// end the game thread
 		isRunning = false;
 		//soundManager.stopClip ("background");
+	}
+
+
+	public boolean allPackagesStolen(){
+		for(int i=0; i < packages.length; i++){
+			if(!packages[i].collected())
+				return false;
+		}
+
+		return true;
+	}
+
+
+	public boolean allLootCollected(){
+		return loot1.collected() && loot2.collected();
 	}
 }
