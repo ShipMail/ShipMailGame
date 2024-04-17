@@ -250,4 +250,9 @@ public class GamePanel extends JPanel
 	public boolean allLootCollected(){
 		return loot1.collected() && loot2.collected();
 	}
+
+
+	public int getLevel(){
+		return level;
+	}
 }
