@@ -31,7 +31,7 @@ public class GamePanel extends JPanel
 	private PirateAnimationManager[] pirates;
 	private LootManager loot1;
 	private LootManager loot2;
-	private Package[] packages;
+	private MailPackage[] mailPackages;
 
 	private Random random;
 
@@ -71,10 +71,10 @@ public class GamePanel extends JPanel
 		pirates[0] = new PirateAnimationManager(this, random.nextInt(300, 450), random.nextInt(300, 400), "right", ninja, loot1);
 		pirates[1] = new PirateAnimationManager(this, random.nextInt(300, 450), random.nextInt(300, 400), "left", ninja, loot2);
 
-		packages = new Package[3];
-		packages[0] = new Package(this, random.nextInt(100, 600), random.nextInt(300, 400), pirates, ninja);
-		packages[1] = new Package(this, random.nextInt(100, 600), random.nextInt(300, 400), pirates, ninja);
-		packages[2] = new Package(this, random.nextInt(100, 600), random.nextInt(300, 400), pirates, ninja);
+		mailPackages = new MailPackage[3];
+		mailPackages[0] = new MailPackage(this, random.nextInt(100, 600), random.nextInt(300, 400), pirates, ninja);
+		mailPackages[1] = new MailPackage(this, random.nextInt(100, 600), random.nextInt(300, 400), pirates, ninja);
+		mailPackages[2] = new MailPackage(this, random.nextInt(100, 600), random.nextInt(300, 400), pirates, ninja);
 	}
 
 
@@ -99,8 +99,8 @@ public class GamePanel extends JPanel
 		for(int i=0; i < pirates.length; i++)
 			pirates[i].update();
 		
-		for(int i=0; i < packages.length; i++)
-			packages[i].update();
+		for(int i=0; i < mailPackages.length; i++)
+			mailPackages[i].update();
 	}
 
 
@@ -145,8 +145,8 @@ public class GamePanel extends JPanel
 
 
 			if(ninja.isDead()){
-				for(int i=0; i < packages.length; i++)
-					packages[i].draw(imageContext); //packages for pirates to steal
+				for(int i=0; i < mailPackages.length; i++)
+					mailPackages[i].draw(imageContext); //packages for pirates to steal
 			}
 
 			//end game when pirates steal all packages or ninja collects all loot
@@ -238,8 +238,8 @@ public class GamePanel extends JPanel
 
     //checks that pirates stole all packages
 	public boolean allPackagesStolen(){
-		for(int i=0; i < packages.length; i++){
-			if(!packages[i].collected())
+		for(int i=0; i < mailPackages.length; i++){
+			if(!mailPackages[i].collected())
 				return false;
 		}
 

@@ -52,7 +52,7 @@ public class PirateAnimationManager {
     public PirateAnimationManager(GamePanel p, int xPos, int yPos, String type, NinjaAnimationManager ninja, LootManager loot) {
 
         panel = p;
-        dx = 4;		// increment to move along x-axis
+        dx = 5;		// increment to move along x-axis
         dy = 5;	// increment to move along y-axis
         x = xPos;
         y = yPos;
@@ -257,11 +257,7 @@ public class PirateAnimationManager {
             x = x - dx;
 
 
-        /*logic to implement pirates getting near to packages*/
-
-        else{
-            x = x + dx;
-        }
+        /*add logic to implement pirates getting near to packages*/
 
 
         if(y < ninjaAnimationManager.getY() && !ninjaAnimationManager.isDead())
