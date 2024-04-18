@@ -85,7 +85,7 @@ public class GamePanel extends JPanel
 				if (!isPaused)
 					gameUpdate();
 				gameRender();
-				//Thread.sleep (50);	
+				Thread.sleep (50);	
 			}
 		}
 		catch(InterruptedException e) {}
