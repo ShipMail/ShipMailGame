@@ -2,9 +2,8 @@ import javax.swing.*;			// need this for GUI objects
 import java.awt.*;			// need this for Layout Managers
 import java.awt.event.*;		// need this to respond to GUI events
 	
-public class GameWindow extends JFrame implements ActionListener, KeyListener,  MouseListener
+public class GameWindow extends JFrame implements ActionListener, KeyListener, MouseListener
 {
-	 
 	//Label Declaration
 	private JLabel score;
 	private JLabel lives;
@@ -32,8 +31,6 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener,  
 
 	private Container window;
 	public Color color;
-
-	
 
 	@SuppressWarnings({"unchecked"})
 	public GameWindow() {
@@ -160,6 +157,7 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener,  
 	}
 
 
+
 	// implement single method in ActionListener interface
 
 	public void actionPerformed(ActionEvent e) {
@@ -170,6 +168,7 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener,  
 		if (command.equals(startB.getText())) {
 			gamePanel.startGame();
 		}
+
 		if (command.equals(pauseB.getText())) {
 			gamePanel.pauseGame();
 			if (command.equals("Pause Game"))
@@ -203,20 +202,37 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener,  
 		String keyText = e.getKeyText(keyCode);
 		livesTF.setText(keyText + " pressed.");
 
-		if (keyCode == KeyEvent.VK_LEFT) {
-			gamePanel.updatePlayer (1);
-		}
+		//level 1 controls
+		if(gamePanel.getLevel() == 1){
 
-		if (keyCode == KeyEvent.VK_RIGHT) {
-			gamePanel.updatePlayer (2);
-		}
+			if (keyCode == KeyEvent.VK_LEFT) {
+				gamePanel.updatePlayer (1);
+			}
+	
+			if (keyCode == KeyEvent.VK_RIGHT) {
+				gamePanel.updatePlayer (2);
+			}
+	
+			if (keyCode == KeyEvent.VK_UP) {
+				gamePanel.updatePlayer (3);
+			}
+	
+			if (keyCode == KeyEvent.VK_DOWN) {
+				gamePanel.updatePlayer (4);
+			}
+	
+			if (keyCode == KeyEvent.VK_K) {
+				gamePanel.updatePlayer (5);
+			}
+	
+			if (keyCode == KeyEvent.VK_C) {
+				gamePanel.updatePlayer (6);
+			}
+	
+			if (keyCode == KeyEvent.VK_S) {
+				gamePanel.updatePlayer (7);
+			}
 
-		if (keyCode == KeyEvent.VK_UP) {
-			gamePanel.updatePlayer(3);
-		}
-
-		if (keyCode == KeyEvent.VK_DOWN) {
-			gamePanel.updatePlayer(4);
 		}
 	}
 
