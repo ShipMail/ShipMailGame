@@ -1,12 +1,14 @@
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
+import java.awt.Graphics2D;
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.awt.image.BufferedImage;
 
-
+/**
+   The ImageManager class manages the loading and processing of images.
+*/
 
 public class ImageManager {
       
@@ -18,7 +20,6 @@ public class ImageManager {
 		return new ImageIcon(fileName).getImage();
 	}
 
-	
 	public static BufferedImage loadBufferedImage(String filename) {
 		BufferedImage bi = null;
 
@@ -33,9 +34,8 @@ public class ImageManager {
 	}
 
 
-  	
-	
-//Copies the buffered image
+  	// make a copy of the BufferedImage src
+
 	public static BufferedImage copyImage(BufferedImage src) {
 		if (src == null)
 			return null;
@@ -56,5 +56,6 @@ public class ImageManager {
     		return copy; 
 	  }
 
-
 }
+
+
