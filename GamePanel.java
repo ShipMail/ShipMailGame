@@ -79,7 +79,7 @@ public class GamePanel extends JPanel
 
 
 	public void run () {
-		//try {
+		try {
 			isRunning = true;
 			while (isRunning) {
 				if (!isPaused)
@@ -87,8 +87,8 @@ public class GamePanel extends JPanel
 				gameRender();
 				//Thread.sleep (50);	
 			}
-		//}
-		//catch(InterruptedException e) {}
+		}
+		catch(InterruptedException e) {}
 	}
 
 
