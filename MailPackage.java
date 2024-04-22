@@ -19,7 +19,7 @@ public class MailPackage {
     private PirateAnimationManager[] pirateAnimationManagers;
     private GamePanel panel;
 
-    public MailPackage(GamePanel p, int xPos, int yPos, PirateAnimationManager[] pirates, NinjaAnimationManager ninja){
+    public MailPackage(GamePanel p, int xPos, int yPos, NinjaAnimationManager ninja){
         x = xPos;
         y = yPos;
         panel = p;
@@ -34,7 +34,6 @@ public class MailPackage {
         alphaChange = 51;			// how to update alpha in game loop
 
         packageImage = ImageManager.loadBufferedImage("images/package.png");
-        pirateAnimationManagers = pirates;
         ninjaAnimationManager = ninja;
         copy = ImageManager.copyImage(packageImage);	//  make a copy of the original image
     }
@@ -86,30 +85,15 @@ public class MailPackage {
     }
 
 
-    public boolean collidesWithPirate(PirateAnimationManager[] pirates){
-
-        Rectangle2D.Double[] pirateRects = new Rectangle2D.Double[pirates.length];
-        //check if any frame of a pirate animation collides with the package
-        for(int i=0; i < pirates.length; i++){
-            pirateRects = pirates[i].getBoundingRectangles();
-
-            for(int j=0; j < pirateRects.length; j++){
-                if(pirateRects[j].intersects(getBoundingRectangle())){
-                    return true;
-                }
-            }
-        }
-        
-        return false;
-    }
-
-
 
     public void update() {				// modify time and change the effect if necessary
-        if(collidesWithPirate(pirateAnimationManagers) && alpha > 50 && ninjaAnimationManager.isDead())
+        if(alpha > 50)
         {
             alpha = alpha - alphaChange; //pirate collects a package and it disappears
         }
+
+        //if(alpha == 0)
+          //  alpha = 255;
 		
 	}
 
@@ -125,6 +109,14 @@ public class MailPackage {
 
     public int getY(){
         return y;
+    }
+
+    public int getWidth(){
+        return width;
+    }
+
+    public int getHeight(){
+        return height;
     }
 
 }
