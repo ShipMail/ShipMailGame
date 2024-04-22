@@ -95,6 +95,8 @@ public class NinjaAnimationManager {
     Image[] anim7Frames; //left sword chop
     Image[] anim8Frames; //left front flip
 
+    SoundManager soundManager;
+
 
     public NinjaAnimationManager(GamePanel p){
 
@@ -102,10 +104,10 @@ public class NinjaAnimationManager {
 
         //create animation objects
         animation1 = new Animation(false);	// loop continuously
-        animation2 = new Animation(false);	// loop continuously
+        animation2 = new Animation(true);	// loop continuously
         animation3 = new Animation(false);	// loop continuously
         animation4 = new Animation(false);	// loop continuously
-        animation5 = new Animation(false);	// loop continuously
+        animation5 = new Animation(true);	// loop continuously
         animation6 = new Animation(false);	// loop continuously
         animation7 = new Animation(false);	// loop continuously
         animation8 = new Animation(false);	// loop continuously
@@ -113,8 +115,8 @@ public class NinjaAnimationManager {
 
         dx = 5;	// increment to move along x-axis
         dy = 5;		// increment to move along y-axis
-        x = 100;
-        y = 350;
+        x = 500;
+        y = 400;
 
         // load images for animations
 
@@ -258,7 +260,7 @@ public class NinjaAnimationManager {
             animation8.addFrame(anim8Frames[i], 100);
         }
 
-
+        soundManager = SoundManager.getInstance();
         animation = animation2;
     }
 
@@ -288,8 +290,8 @@ public class NinjaAnimationManager {
             }
     
             else if(direction == 5){
-    
-                if(animation.equals(animation2))
+                soundManager.playClip("watah", false);
+                if(animation.equals(animation2) || animation.equals(animation1) || animation.equals(animation3) || animation.equals(animation4))
                     animation = animation1; //right front flip
                 else
                     animation = animation8; //left front flip
@@ -297,20 +299,23 @@ public class NinjaAnimationManager {
             }
     
             else if(direction == 6){
-                if(animation.equals(animation2))
+                if(animation.equals(animation2) || animation.equals(animation1) || animation.equals(animation3) || animation.equals(animation4))
                     animation = animation3; //sword right strike
                 else
                     animation = animation6; //sword left strike
                 animation.start();
+                soundManager.playClip("swing", false);
             }
     
             else if(direction == 7){
-                if(animation.equals(animation2))
+                if(animation.equals(animation2) || animation.equals(animation1) || animation.equals(animation3) || animation.equals(animation4))
                     animation = animation4; // sword right chop
                 else
                     animation = animation7; //sword left chop
                 animation.start();
+                soundManager.playClip("stab", false);
             }
+
 
             if(x <= 0)
                 x = 0;
@@ -495,6 +500,7 @@ public class NinjaAnimationManager {
             fall.rotate(Math.toRadians(-90), x + width / 2, y + height / 2); // Rotate by -90 degrees (to fall backwards)
 
             dead = killed;
+            soundManager.playClip("ninjascream", false);
         }
 
     }
