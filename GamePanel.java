@@ -67,14 +67,14 @@ public class GamePanel extends JPanel
 		loot1 = new LootManager(random.nextInt(0, 850), random.nextInt(350, 450), ninja);
 		loot2 = new LootManager(random.nextInt(0, 850), random.nextInt(350, 450), ninja);
 
-		pirates = new PirateAnimationManager[2];
-		pirates[0] = new PirateAnimationManager(this, random.nextInt(300, 450), random.nextInt(300, 400), "right", ninja, loot1);
-		pirates[1] = new PirateAnimationManager(this, random.nextInt(300, 450), random.nextInt(300, 400), "left", ninja, loot2);
-
 		mailPackages = new MailPackage[3];
-		mailPackages[0] = new MailPackage(this, random.nextInt(100, 600), random.nextInt(300, 400), pirates, ninja);
-		mailPackages[1] = new MailPackage(this, random.nextInt(100, 600), random.nextInt(300, 400), pirates, ninja);
-		mailPackages[2] = new MailPackage(this, random.nextInt(100, 600), random.nextInt(300, 400), pirates, ninja);
+		mailPackages[0] = new MailPackage(this, random.nextInt(100, 600), 350, ninja);
+		mailPackages[1] = new MailPackage(this, random.nextInt(100, 600), 350, ninja);
+		mailPackages[2] = new MailPackage(this, random.nextInt(100, 600), 350, ninja);
+
+		pirates = new PirateAnimationManager[2];
+		pirates[0] = new PirateAnimationManager(this, 90, 290, "right", ninja, loot1, mailPackages);
+		pirates[1] = new PirateAnimationManager(this, random.nextInt(100, 450), random.nextInt(300, 400), "right", ninja, loot2, mailPackages);
 	}
 
 
@@ -99,8 +99,8 @@ public class GamePanel extends JPanel
 		for(int i=0; i < pirates.length; i++)
 			pirates[i].update();
 		
-		for(int i=0; i < mailPackages.length; i++)
-			mailPackages[i].update();
+		//for(int i=0; i < mailPackages.length; i++)
+		//	mailPackages[i].update();
 	}
 
 
