@@ -5,9 +5,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.Random;
 
-/**
-   A component that displays all the game entities
-*/
 
 public class GamePanel extends JPanel
 		       implements Runnable {
@@ -21,7 +18,7 @@ public class GamePanel extends JPanel
 	private Thread gameThread;
 	private BufferedImage image;
 	public Background background;
-	public Background background2;
+	public Backgroundd background2;
 
 	private int level;
 	private int width;
@@ -32,6 +29,9 @@ public class GamePanel extends JPanel
 	private LootManager loot1;
 	private LootManager loot2;
 	private MailPackage[] mailPackages;
+	private Floor floor;
+	private Mailman mailman;
+	private Dog dog;
 
 	private Random random;
 
@@ -49,7 +49,7 @@ public class GamePanel extends JPanel
 		height = 500;
 
 		gameThread = null;
-		level = 1;
+		level = 2;
 	
 		random = new Random();
         
@@ -59,7 +59,7 @@ public class GamePanel extends JPanel
 
 	public void createGameEntities() {
 		background = new Background(this, "images/beach.jpg", 96);
-		background2 = new Background(this, "images/Suburbs.jpeg", 110);
+		background2 = new Backgroundd(this, "images/Suburbs.jpeg", 110);
 
 		ship = new Ship(this, 0, 0);
 		ninja = new NinjaAnimationManager(this);
@@ -75,6 +75,12 @@ public class GamePanel extends JPanel
 		pirates = new PirateAnimationManager[2];
 		pirates[0] = new PirateAnimationManager(this, 90, 290, "right", ninja, loot1, mailPackages);
 		pirates[1] = new PirateAnimationManager(this, random.nextInt(100, 450), random.nextInt(300, 400), "right", ninja, loot2, mailPackages);
+
+
+
+		floor = new Floor(this);
+		dog = new Dog();
+		mailman = new Mailman(this,floor,dog);
 	}
 
 
@@ -96,11 +102,18 @@ public class GamePanel extends JPanel
 		ship.move();
 		ninja.update();
 
+		if(level == 1){
 		for(int i=0; i < pirates.length; i++)
 			pirates[i].update();
-		
+		}
+
 		//for(int i=0; i < mailPackages.length; i++)
 		//	mailPackages[i].update();
+
+		if(level == 2){
+			mailman.update();
+			dog.update();
+		}
 	}
 
 
@@ -113,10 +126,16 @@ public class GamePanel extends JPanel
 			ninja.move(direction);
 
 		else if(level == 2){
-			if (background != null) {
-				background.move(direction);
+				if (background != null && mailman != null ) {
+				
+					int mailManMovement = background2.move(direction);
+					mailman.setDirections(mailManMovement);
+					background2.setDirections(mailman.move(direction));
+	
+				}
+				
 			}
-		}
+		
 	}
 
 
@@ -157,9 +176,20 @@ public class GamePanel extends JPanel
 				endGame();
 		}
 		
+		//~~~~~~~LEVEL TWO~~~~~~~~~~~~~~~~~
 		else if(level == 2){
 			background2.draw(imageContext);
+			mailman.draw(imageContext);
+
+			if (floor != null) {
+				floor.draw(imageContext);
+			}
+
+			if (dog != null) {
+				dog.draw (imageContext);
+			}
 		}
+		
 		
 
 		Graphics2D g2 = (Graphics2D) getGraphics();	// get the graphics context for the panel
@@ -194,6 +224,11 @@ public class GamePanel extends JPanel
 				if(pirates[i] != null){
 					pirates[i].start();
 				}
+			}
+		}
+		else if(level == 2){
+			if (dog != null) {
+				dog.start();
 			}
 		}
 

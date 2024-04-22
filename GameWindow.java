@@ -234,6 +234,19 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener, M
 			}
 
 		}
+
+		if(gamePanel.getLevel() == 2){
+			if (keyCode == KeyEvent.VK_LEFT) {
+				gamePanel.updatePlayer (1);
+			}
+	
+			if (keyCode == KeyEvent.VK_RIGHT) {
+				gamePanel.updatePlayer (2);
+			}
+			if (keyCode == KeyEvent.VK_SPACE) {
+				gamePanel.updatePlayer (5);
+			}
+		}
 	}
 
 	public void keyReleased(KeyEvent e) {
