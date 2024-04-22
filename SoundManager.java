@@ -24,7 +24,18 @@ public class SoundManager {
         clip = loadClip("DogBark.wav");
         clips.put("DogBark", clip);
         
-        */
+        clip = loadClip("sounds/ninja-scream.wav");	
+	clips.put("ninjascream", clip);
+
+	clip = loadClip("sounds/ninja-watah.wav");
+	clips.put("watah", clip);
+
+	clip = loadClip("sounds/machete-swing.wav");
+	clips.put("swing", clip);
+
+	clip = loadClip("sounds/knife-stab.wav");
+	clips.put("stab", clip);
+ */
         
 
     }
