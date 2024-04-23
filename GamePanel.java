@@ -36,6 +36,13 @@ public class GamePanel extends JPanel
 
 	private Random random;
 	private ScorePanel scorePanel;
+	private static double countdown = 1.50;
+	private long startTime;
+	private long elapsedTime;
+
+	
+	private double timeRemaining;
+
 
 
 	public GamePanel (ScorePanel scorePanel) {
@@ -95,6 +102,12 @@ public class GamePanel extends JPanel
 					gameUpdate();
 				gameRender();
 				scorePanel.ScoreRender();
+				if(countdown > 0){
+					elapsedTime = System.currentTimeMillis() - startTime;
+					timeRemaining = countdown - (elapsedTime/1000.0/60.0);
+					scorePanel.updateTimer(timeRemaining);
+				}
+
 				Thread.sleep (50);	
 			}
 		}
@@ -117,6 +130,11 @@ public class GamePanel extends JPanel
 		if(level == 2){
 			mailman.update();
 			dog.update();
+			boolean collision = mailman.collidesWithDog();
+		 if(collision){
+			scorePanel.update(1);
+			System.out.println("COLLISION");
+		 }
 		}
 	}
 
@@ -221,6 +239,7 @@ public class GamePanel extends JPanel
 			createGameEntities();
 			gameThread = new Thread (this);			
 			gameThread.start();
+			startTime = System.currentTimeMillis();
 		}
 
 		if(level == 1){
@@ -242,6 +261,8 @@ public class GamePanel extends JPanel
 	public void startNewGame() {				// initialise and start a new game thread 
 
 		isPaused = false;
+		scorePanel.resetPanel();
+		level = 1;
 
 		if (gameThread == null || !isRunning) {
 			//soundManager.playClip ("background", true);
@@ -275,6 +296,8 @@ public class GamePanel extends JPanel
 		//soundManager.stopClip ("background");
 	}
 
+
+	
     //checks that pirates stole all packages
 	public boolean allPackagesStolen(){
 		for(int i=0; i < mailPackages.length; i++){

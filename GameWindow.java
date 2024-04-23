@@ -66,7 +66,6 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener, M
 	        pauseB = new JButton ("Pause Game");
 	        endB = new JButton ("End Game");
 			startNewB = new JButton ("Start New Game");
-	        focusB = new JButton ("Focus");
 			exitB = new JButton ("Exit");
 
 
@@ -75,7 +74,6 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener, M
 					pauseB.addActionListener(this);
 					endB.addActionListener(this);
 					startNewB.addActionListener(this);
-					focusB.addActionListener(this);
 					exitB.addActionListener(this);
 
 
@@ -90,25 +88,8 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener, M
 
 		GridLayout gridLayout;
 
-	//Information Panel
-	informationPanel = new JPanel();
-	gridLayout = new GridLayout(3, 2);
-	informationPanel.setLayout(gridLayout);
-
-	
-			// Information Panel Components
-			informationPanel.add (score);
-			informationPanel.add (scoreTF);
-	
-			informationPanel.add (lives);
-			informationPanel.add (livesTF);		
-	
-			informationPanel.add (mouseL);
-			informationPanel.add (mouseTF);
-	
-	color = new Color(219, 169, 121);
-	informationPanel.setBackground(color);
-	scorePanel = new ScorePanel();
+	//Score Panel
+	scorePanel = new ScorePanel(1);
 	scorePanel.setPreferredSize(new Dimension(400, 110));
 
 
@@ -132,7 +113,6 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener, M
 					buttonPanel.add (pauseB);
 					buttonPanel.add (endB);
 					buttonPanel.add (startNewB);
-					buttonPanel.add (focusB);
 					buttonPanel.add (exitB);
 
 		
@@ -166,7 +146,7 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener, M
 	public void actionPerformed(ActionEvent e) {
 
 		String command = e.getActionCommand();
-		//scoreTF.setText(command + " button clicked.");
+		
 
 		if (command.equals(startB.getText())) {
 			gamePanel.startGame();
@@ -187,9 +167,6 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener, M
 
 		if (command.equals(startNewB.getText()))
 			gamePanel.startNewGame();
-
-		if (command.equals(focusB.getText()))
-			//gamePanel.shootCat();
 
 		if (command.equals(exitB.getText()))
 			System.exit(0);

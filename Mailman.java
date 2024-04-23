@@ -57,7 +57,7 @@ public class Mailman {
 		x = 190;
 		y = 360;
 
-		dx = 8;				// set to zero since background moves instead
+		dx = 15;				// set to zero since background moves instead
 		dy = 8;				// size of vertical movement
 
 		width = 80;
@@ -231,10 +231,7 @@ public class Mailman {
 		 }	
 
 		}
-		boolean collision = collidesWithDog();
-		 if(collision){
-			System.out.println("COLLISION");
-		 }
+		
 	 }
 
 
