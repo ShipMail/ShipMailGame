@@ -90,6 +90,8 @@ public class Dog {
 
 
 	public Rectangle2D.Double getBoundingRectangle(){
-		return new Rectangle2D.Double (x, y, width, height);
+		Rectangle2D.Double doggo = new Rectangle2D.Double (x + 20, y, width - 50 , height);
+
+		return  doggo;
 	   }
 }

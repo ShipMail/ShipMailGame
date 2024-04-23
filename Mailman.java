@@ -198,7 +198,7 @@ public class Mailman {
 		timeElapsed = 0;
   
 		startY = y;
-		initialVelocity = 60;
+		initialVelocity = 80;
 	 }
   
   
