@@ -28,6 +28,7 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener, M
     private JPanel buttonPanel;
     private JPanel informationPanel;
     private GamePanel gamePanel;
+	private ScorePanel scorePanel;
 
 	private Container window;
 	public Color color;
@@ -107,10 +108,14 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener, M
 	
 	color = new Color(219, 169, 121);
 	informationPanel.setBackground(color);
+	scorePanel = new ScorePanel();
+	scorePanel.setPreferredSize(new Dimension(400, 110));
+
+
 
 
 	//Game Panel
-		gamePanel = new GamePanel();
+		gamePanel = new GamePanel(scorePanel);
 		color = new Color(232, 239, 207);
 		gamePanel.setBackground(color);
         gamePanel.setPreferredSize(new Dimension(900, 500));
@@ -132,7 +137,7 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener, M
 
 		
 	//Decorate Main Panel
-	mainPanel.add(informationPanel);
+	mainPanel.add(scorePanel);
 	mainPanel.add(gamePanel);
 	mainPanel.add(buttonPanel);
 	color = new Color(236, 202, 156);
@@ -151,9 +156,7 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener, M
 	//Set Window Properties P2
 	 setVisible(true);
 
-		
-	//Set Score-Bar message
-		scoreTF.setText("0");
+	
 	}
 
 
@@ -163,7 +166,7 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener, M
 	public void actionPerformed(ActionEvent e) {
 
 		String command = e.getActionCommand();
-		scoreTF.setText(command + " button clicked.");
+		//scoreTF.setText(command + " button clicked.");
 
 		if (command.equals(startB.getText())) {
 			gamePanel.startGame();
@@ -199,8 +202,8 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener, M
 
 	public void keyPressed(KeyEvent e) {
 		int keyCode = e.getKeyCode();
-		String keyText = e.getKeyText(keyCode);
-		livesTF.setText(keyText + " pressed.");
+		//String keyText = e.getKeyText(keyCode);
+		//livesTF.setText(keyText + " pressed.");
 
 		//level 1 controls
 		if(gamePanel.getLevel() == 1){

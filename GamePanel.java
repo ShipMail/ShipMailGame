@@ -33,10 +33,12 @@ public class GamePanel extends JPanel
 	private Mailman mailman;
 	private Dog dog;
 
+
 	private Random random;
+	private ScorePanel scorePanel;
 
 
-	public GamePanel () {
+	public GamePanel (ScorePanel scorePanel) {
 		isRunning = false;
 		isPaused = false;
 		soundManager = SoundManager.getInstance();
@@ -52,6 +54,7 @@ public class GamePanel extends JPanel
 		level = 2;
 	
 		random = new Random();
+		this.scorePanel = scorePanel;
         
 		image = new BufferedImage (width, height, BufferedImage.TYPE_INT_RGB);
 	}
@@ -91,6 +94,7 @@ public class GamePanel extends JPanel
 				if (!isPaused)
 					gameUpdate();
 				gameRender();
+				scorePanel.ScoreRender();
 				Thread.sleep (50);	
 			}
 		}
