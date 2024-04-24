@@ -49,12 +49,14 @@ public class PirateAnimationManager {
     GamePanel panel;
 
     boolean dead = false;
+    boolean stolen = false;
+    boolean collected = false;
 
 
     public PirateAnimationManager(GamePanel p, int xPos, int yPos, String type, NinjaAnimationManager ninja, LootManager loot, MailPackage[] mailPackages) {
 
         panel = p;
-        dx = 5;		// increment to move along x-axis
+        dx = 10;		// increment to move along x-axis
         dy = 5;	// increment to move along y-axis
         x = xPos;
         y = yPos;
@@ -113,7 +115,7 @@ public class PirateAnimationManager {
         numAnim1Frames = 5;
 
 
-        animation2 = new Animation(false);
+        animation2 = new Animation(true);
 
         Image animImage11 = ImageManager.loadImage("images/pirate-sword-left (1).png");
         Image animImage12 = ImageManager.loadImage("images/pirate-sword-left (2).png");
@@ -135,7 +137,7 @@ public class PirateAnimationManager {
         numAnim2Frames = 4;
 
 
-        animation3 = new Animation(false);
+        animation3 = new Animation(true);
                     
         Image animImage15 = ImageManager.loadImage("images/pirate-sword-right (1).png");
         Image animImage16 = ImageManager.loadImage("images/pirate-sword-right (2).png");
@@ -143,10 +145,10 @@ public class PirateAnimationManager {
         Image animImage18 = ImageManager.loadImage("images/pirate-sword-right (4).png");
 
         //pirate aims sword right animation
-        animation3.addFrame(animImage15, 25);
-        animation3.addFrame(animImage16, 25);
-        animation3.addFrame(animImage17, 25);
-        animation3.addFrame(animImage18, 75);
+        animation3.addFrame(animImage15, 100);
+        animation3.addFrame(animImage16, 100);
+        animation3.addFrame(animImage17, 100);
+        animation3.addFrame(animImage18, 100);
 
         anim3Frames = new Image[5];
         anim3Frames[0] = animImage15;
@@ -176,20 +178,19 @@ public class PirateAnimationManager {
 
         //activate attack animation based on direction of pirate when collision occurred
         if(collidesWithNinja(ninjaAnimationManager) && currentAnimation.equals(animation) && !dead && !ninjaAnimationManager.isDead()){
-            currentAnimation = animation2;
-            currentAnimation.start();
 
             if(!ninjaAnimationManager.isAttacking()){
+                currentAnimation = animation2;
+                currentAnimation.start();
                 ninjaAnimationManager.killNinja(true);
             }
         }
         
         //kill the ninja if pirate collides with it
         if(collidesWithNinja(ninjaAnimationManager) && currentAnimation.equals(animation1) && !dead && !ninjaAnimationManager.isDead()){
-            currentAnimation = animation3;
-            currentAnimation.start();
-
             if(!ninjaAnimationManager.isAttacking()){
+                currentAnimation = animation3;
+                currentAnimation.start();
                 ninjaAnimationManager.killNinja(true);
             }
         }
@@ -197,10 +198,12 @@ public class PirateAnimationManager {
         //revert to original animations
         if(currentAnimation.equals(animation2) && !currentAnimation.isStillActive() && !dead){
             currentAnimation = animation;
+            currentAnimation.start();
         }
 
         if(currentAnimation.equals(animation3) && !currentAnimation.isStillActive() && !dead){
             currentAnimation = animation1;
+            currentAnimation.start();
         }
 
         //stop the animation if the ninja strikes the pirate
@@ -216,88 +219,91 @@ public class PirateAnimationManager {
             dead = true;
         }
         
-
-
-        //pirate chasing ninja effect
-        if(x < ninjaAnimationManager.getX() && !ninjaAnimationManager.isDead() && !dead){
-            currentAnimation = animation1;
-
-            if(!currentAnimation.isStillActive())
-                currentAnimation.start();
-            
-            x = x + dx;
-        }
-
-        else if(x > ninjaAnimationManager.getX() && !ninjaAnimationManager.isDead() && !dead){
-            currentAnimation = animation;
-
-            if(!currentAnimation.isStillActive())
-                currentAnimation.start();
-            
-            x = x - dx;
-        }
-
-
-        /*add logic to implement pirates getting near to packages*/
-        if(ninjaAnimationManager.isDead()){
-            for(int i=0; i < mailPackages.length; i++){
-                while(x < mailPackages[i].getX() && !mailPackages[i].collected()){
-                    currentAnimation = animation1;
-
-                    if(!currentAnimation.isStillActive())
-                        currentAnimation.start();
-                    
-                        x = x + dx;
-                    //x = mailPackages[i].getX() - mailPackages[i].getWidth();
-                }
-        
-                while(x > mailPackages[i].getX() && !mailPackages[i].collected()){
-                    currentAnimation = animation;
-        
-                    if(!currentAnimation.isStillActive())
-                        currentAnimation.start();
-                    
-                    x = x - dx;
-                    //x = mailPackages[i].getX() - mailPackages[i].getWidth();
-                }
-            }
-        }
-        
-    
-        if(ninjaAnimationManager.isDead()){
-            for(int i=0; i < mailPackages.length; i++){
-                if(collidesWithPackage(mailPackages[i]))
-                    mailPackages[i].update();
-            }
-        }
-
-       
-        
-
-
-        if(y < ninjaAnimationManager.getY() && !ninjaAnimationManager.isDead())
-            y = y + dy;
-
-        else if(y > ninjaAnimationManager.getY() && !ninjaAnimationManager.isDead())
-            y = y - dy;
-
-        if(x > 650)
-          x = 0;
-
-        if(x < 0)
-          x = 650;
-
-        if(y > 350)
-            y = 350;
-
-
-        if(!dead)    
+        if(!dead){   
             currentAnimation.update();
+            stealPackages();
+        }
+        collectPackages();
 
         if (!currentAnimation.isStillActive()){
             return;
         }
+
+        if(type.equals("right"))
+            x = x + dx;
+        else 
+            x = x - dx;
+
+        if(x == 850){
+            dx = dx * -1;
+            currentAnimation = animation;
+
+            if(!currentAnimation.isStillActive()){
+                currentAnimation.start();
+            }
+        }
+
+        else if(x < 0){
+            dx = dx * -1;
+            currentAnimation = animation1;
+
+            if(!currentAnimation.isStillActive()){
+                currentAnimation.start();
+            }
+        }
+
 	}
+
+    //ninja collects and saves the packages
+    public void collectPackages(){
+
+      if(!collected){
+        for(int i=0; i < mailPackages.length; i++){
+            if(mailPackages[i].collidesWithNinja(ninjaAnimationManager)){
+                collected = true;
+                for(int j=0; j < mailPackages.length; j++){
+                    while(!mailPackages[j].collected())
+                        mailPackages[j].update();
+                    panel.updateScore(2);
+                }
+            }
+          }
+      }
+    }
+
+    //pirates get closer to packages to steal them
+    public void stealPackages(){
+        if(ninjaAnimationManager.isDead()){
+
+            for(int i=0; i < mailPackages.length; i++){
+                if(x < mailPackages[i].getX() && !mailPackages[i].collected()){
+                    x = x + 5;
+                }
+        
+                if(x > mailPackages[i].getX() && !mailPackages[i].collected()){
+                    x = x - 5;
+                }
+
+
+                if(collidesWithPackage(mailPackages[i])){
+                    stolen = true;
+                    for(int j=0; j < mailPackages.length;j++){
+                        while(!mailPackages[j].collected())
+                            mailPackages[j].update();
+                    }
+                }  
+            } 
+        }
+    }
+
+
+    public boolean allPackagesCollected(){
+        return collected;
+    }
+
+    public boolean allPackagesStolen(){
+        return stolen;
+    }
 
 
 	public void draw(Graphics2D g2) {
