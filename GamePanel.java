@@ -3,6 +3,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 import java.util.Random;
 
 
@@ -23,6 +24,7 @@ public class GamePanel extends JPanel
 	private int level;
 	private int width;
 	private int height;
+	private int withoutmail = 0, withmail = 0;
 
 	private NinjaAnimationManager ninja;
 	private PirateAnimationManager[] pirates;
@@ -32,6 +34,8 @@ public class GamePanel extends JPanel
 	private Floor floor;
 	private Mailman mailman;
 	private Dog dog;
+	ArrayList <Mailbox> mailboxes = new ArrayList<>();
+
 
 
 	private Random random;
@@ -42,7 +46,8 @@ public class GamePanel extends JPanel
 
 	
 	private double timeRemaining;
-
+	int b;
+	int temp;
 
 
 	public GamePanel (ScorePanel scorePanel) {
@@ -91,6 +96,19 @@ public class GamePanel extends JPanel
 		floor = new Floor(this);
 		dog = new Dog();
 		mailman = new Mailman(this,floor,dog);
+		//0 = No mail 1 = Mail
+		mailboxes.add(new Mailbox(this, 0, background2,-220,mailman));
+		mailboxes.add(new Mailbox(this,1,background2, 20,mailman));
+		mailboxes.add(new Mailbox(this,1,background2, 310,mailman));
+		mailboxes.add(new Mailbox(this, 0, background2,650,mailman));
+		mailboxes.add(new Mailbox(this,1,background2, 950,mailman));
+		mailboxes.add(new Mailbox(this, 0, background2,1250,mailman));
+		for(Mailbox mailbox: mailboxes){
+			allocateMailBox(mailbox);
+		}
+
+
+		
 	}
 
 
@@ -133,7 +151,13 @@ public class GamePanel extends JPanel
 			boolean collision = mailman.collidesWithDog();
 		 if(collision){
 			scorePanel.update(1);
-			System.out.println("COLLISION");
+		 }
+
+		 for(Mailbox mailbox : mailboxes){
+			boolean collision2 = mailbox.collidesWithMailman();
+			if(collision2){
+				System.out.println("Delivery Status: " + mailbox.getDeliveryStatus() + " Collsion");
+			}
 		 }
 		}
 	}
@@ -149,11 +173,24 @@ public class GamePanel extends JPanel
 
 		else if(level == 2){
 				if (background != null && mailman != null ) {
-				
+					
 					int mailManMovement = background2.move(direction);
+					if(mailman.getMailman() == 190){
+						for(Mailbox mailbox: mailboxes){
+							int temp =  mailbox.move(direction);
+						}
+					
+				} 
+					
 					mailman.setDirections(mailManMovement);
-					background2.setDirections(mailman.move(direction));
-	
+					int h = mailman.move(direction);
+
+
+					background2.setDirections(h);
+					for(Mailbox mailbox: mailboxes){
+						mailbox.setDirections(h);
+					}
+					
 				}
 				
 			}
@@ -201,6 +238,10 @@ public class GamePanel extends JPanel
 		//~~~~~~~LEVEL TWO~~~~~~~~~~~~~~~~~
 		else if(level == 2){
 			background2.draw(imageContext);
+			for(Mailbox mailbox: mailboxes){
+				mailbox.draw(imageContext);
+			}
+			
 			mailman.draw(imageContext);
 
 			if (floor != null) {
@@ -316,5 +357,32 @@ public class GamePanel extends JPanel
 
 	public int getLevel(){
 		return level;
+	}
+
+	public void allocateMailBox(Mailbox mailbox){
+		int choice = (int)(Math.random() * 2); // 0 - 1
+
+		if(choice == 0 && withoutmail != 3){
+			withoutmail++;
+		    mailbox.loadImage(choice);
+		}
+		else if(choice == 0 && withoutmail == 3){
+			if(withmail < 3){
+			withmail++;
+			mailbox.loadImage(1);
+			}
+		}
+		else if(choice == 1 && withmail != 3){
+			withmail++;
+			mailbox.loadImage(choice);
+		}
+		else if(choice == 1 && withmail == 3){
+			if(withoutmail < 3){
+				withoutmail++;
+				mailbox.loadImage(0);
+			}
+		}
+		System.out.println("Without Mail: " + withoutmail + "  WithMail" + withmail);
+	    
 	}
 }

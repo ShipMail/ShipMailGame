@@ -57,7 +57,7 @@ public class Mailman {
 		x = 190;
 		y = 360;
 
-		dx = 15;				// set to zero since background moves instead
+		dx = 20;				// set to zero since background moves instead
 		dy = 8;				// size of vertical movement
 
 		width = 80;
@@ -96,7 +96,7 @@ public class Mailman {
 	public int move (int direction) {
 
 		if (!panel.isVisible ()) return 0;
-		System.out.println("MAILMAN IS AT X = " + x);
+		//System.out.println("MAILMAN IS AT X = " + x);
       
 		if (direction == 1 ) {
 			leftClick++;
@@ -134,7 +134,7 @@ public class Mailman {
 					return 10;					// background can start scrolling left and right
 				}
 
-				else if(x<190)					
+				else if(x < 190)					
 					return -1;		//don't move background left
 			}
 			
@@ -176,7 +176,7 @@ public class Mailman {
 					directions.remove(Integer.valueOf(2));	// and right
 					return 10;								// background can start scrolling left and right
 				}
-				else if(x>190 )
+				else if(x >190 )
 					return -2;		//don't move background right
 			}
 			
@@ -262,7 +262,7 @@ public class Mailman {
 		
 		if(direction > 0){				// new direction the bat can move in
 			directions.add(Integer.valueOf(direction));
-			System.out.println("In mailman added: "+direction);
+			//System.out.println("In mailman added: "+direction);
 		}
 
 	}
@@ -286,4 +286,7 @@ public class Mailman {
 		return mailmanRect.intersects(dogRect);
 	}
 
+	public int getMailman(){
+		return x;
+	}
 }

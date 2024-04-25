@@ -33,21 +33,12 @@ public class Backgroundd {
     bgImageWidth = bgImage.getWidth(null);		// get width of the background
    	bgImageHeight = bgImage.getHeight(null);	// get width of the background
 
-	System.out.println ("bgImageWidth = " + bgImageWidth);
-	System.out.println ("bgImageHeight = " + bgImageHeight);
+	
 
 	panelWidth = panel.getWidth();
 	panelHeight = panel.getHeight();
 
-	System.out.println ("Width of panel: " + panelWidth);
-	System.out.println ("Height of panel: " + panelHeight);
-
-
-	if (bgImageWidth < panel.getWidth())
-      		System.out.println("Background width < panel width");
-
-	if (bgImageHeight < panel.getHeight())
-      		System.out.println("Background height < panel height");
+	
 
     this.bgDX = 20;			// move factor along x-axis
 	this.bgDY = 0;			// move factor along y-axis
@@ -73,19 +64,12 @@ public class Backgroundd {
 
 	// if bat is able to move left or right, don't update background 
 	if( !directions.contains(Integer.valueOf(-2)) && !directions.contains(Integer.valueOf(-1))){	
-
-		bgX = bgX - bgDX;
 		bg1X = bg1X - bgDX;
 	}
 
-	String mess = "Moving background left. bg1X = " + bg1X;
-	System.out.println (mess);
-
-	if (bg1X + bgImageWidth < panelWidth) {		
-		System.out.println ("Can't scroll right further.");
+	if (lCon()) {		
+		//System.out.println ("Can't scroll right further.");
 		bg1X = panelWidth - bgImageWidth;
-		mess = "New bg1X = " + bg1X;
-		System.out.println (mess);
 		return 2;	// the bat can move right
 	}
 	else
@@ -97,23 +81,35 @@ public class Backgroundd {
 
 	// if bat is able to move left or right, don't update background
 	if( !directions.contains(Integer.valueOf(-1)) && !directions.contains(Integer.valueOf(-2))){
-		bgX = bgX + bgDX;
 					
 		bg1X = bg1X + bgDX;
+		
 	}
 
-	String mess = "Moving background right. bg1X = " + bg1X;
-	System.out.println (mess);
-
-	if (bg1X > 0) {
-		System.out.println ("Can't scroll left further.");
+	if (rCon()) {
+		//System.out.println ("Can't scroll left further.");
 		bg1X = 0;
-		mess = "New bg1X = " + bg1X;
-		System.out.println (mess);
 		return 1;		//bat can move left
 	}
 	return -1;		//bat can't move left, background scrolling
 
+   }
+
+
+
+
+   public boolean rCon(){
+	if(bg1X > 0){
+		return true;
+	}
+	return false;
+   }
+
+   public boolean lCon(){
+	if(bg1X + bgImageWidth < panelWidth){
+		return true;
+	}
+	return false;
    }
  
 
@@ -122,18 +118,18 @@ public class Backgroundd {
 
 	if(direction<0){	// stop background in given direction
 		directions.add(Integer.valueOf(direction));
-		System.out.println("In bg, added " +direction);
+		//System.out.println("Background Hashet added " +direction);
 	}
 	else if (direction > 0){	// restart background movement in given direction
 		if(direction >= 10){	// corresponds to 2 directions
 			directions.remove(Integer.valueOf(-direction/10));
 			directions.remove(Integer.valueOf((-direction/10 -1)));
-			System.out.println("In bg removed (10s): " + (-direction/10));
-			System.out.println("In bg removed (10s): " + (-direction/10 -1));
+			//System.out.println("In bg removed (10s): " + (-direction/10));
+			//System.out.println("In bg removed (10s): " + (-direction/10 -1));
 		}
 
 		directions.remove(Integer.valueOf(-direction));		// update so background can move
-	    System.out.println("In bg removed: " + (-direction));
+	    //System.out.println("Background Hashset removed: " + (-direction));
 	}
    }
 
