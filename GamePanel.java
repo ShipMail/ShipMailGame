@@ -150,12 +150,12 @@ public class GamePanel extends JPanel
 			scorePanel.update(1);
 		 }
 
-		 for(Mailbox mailbox : mailboxes){
+		/*  for(Mailbox mailbox : mailboxes){
 			boolean collision2 = mailbox.collidesWithMailman();
 			if(collision2){
 				System.out.println("Delivery Status: " + mailbox.getDeliveryStatus() + " Collsion");
 			}
-		 }
+		 }*/
 		}
 	}
 
@@ -388,7 +388,18 @@ public class GamePanel extends JPanel
 				mailbox.loadImage(0);
 			}
 		}
-		System.out.println("Without Mail: " + withoutmail + "  WithMail" + withmail);
+	}
+
+	public void mailBoxCollisionUpdate(){
+		for(Mailbox mailbox : mailboxes){
+			boolean collision2 = mailbox.collidesWithMailman();
+			if(collision2 && mailbox.getDeliveryStatus() == 1){
+				mailbox.setDeliveryStatus(0);
+				mailbox.loadImage(0);
+				scorePanel.update(3);
+				System.out.println("Delivery Status: " + mailbox.getDeliveryStatus() + " Collsion");
+			}
+		 }
 	}
 	    
 

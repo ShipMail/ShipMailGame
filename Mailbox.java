@@ -156,4 +156,8 @@ public int getDeliveryStatus(){
 	return deliveryStatus;
 }
 
+public void setDeliveryStatus(int i){
+	deliveryStatus = i;
+}
+
 }

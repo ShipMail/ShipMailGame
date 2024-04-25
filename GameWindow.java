@@ -226,6 +226,10 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener, M
 			if (keyCode == KeyEvent.VK_SPACE) {
 				gamePanel.updatePlayer (5);
 			}
+			if (keyCode == KeyEvent.VK_D) {
+				gamePanel.mailBoxCollisionUpdate();
+			}
+
 		}
 	}
 
