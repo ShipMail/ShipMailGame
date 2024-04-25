@@ -88,8 +88,8 @@ public class GamePanel extends JPanel
 		mailPackages[2] = new MailPackage(this, random.nextInt(100, 600), 350, ninja);
 
 		pirates = new PirateAnimationManager[2];
-		pirates[0] = new PirateAnimationManager(this, 90, 290, "right", ninja, loot1, mailPackages);
-		pirates[1] = new PirateAnimationManager(this, random.nextInt(100, 450), random.nextInt(300, 400), "right", ninja, loot2, mailPackages);
+		pirates[0] = new PirateAnimationManager(this, 850, 320, "left", ninja, loot1, mailPackages);
+		pirates[1] = new PirateAnimationManager(this, 50, 320, "right", ninja, loot2, mailPackages);
 
 
 
@@ -141,9 +141,6 @@ public class GamePanel extends JPanel
 		for(int i=0; i < pirates.length; i++)
 			pirates[i].update();
 		}
-
-		//for(int i=0; i < mailPackages.length; i++)
-		//	mailPackages[i].update();
 
 		if(level == 2){
 			mailman.update();
@@ -212,7 +209,7 @@ public class GamePanel extends JPanel
 			}
 
 			if(ninja != null){
-			ninja.draw(imageContext);
+				ninja.draw(imageContext);
 			}
 
 			for(int i=0; i < pirates.length; i++){
@@ -221,18 +218,18 @@ public class GamePanel extends JPanel
 				}
 			}
 
-
-			if(ninja.isDead()){
-				for(int i=0; i < mailPackages.length; i++)
-					mailPackages[i].draw(imageContext); //packages for pirates to steal
+			for(int i=0; i < mailPackages.length; i++){
+				if(mailPackages[i] != null){
+					mailPackages[i].draw(imageContext);
+				}
 			}
 
 			//end game when pirates steal all packages or ninja collects all loot
 			if(allPackagesStolen())
 				endGame();
 
-			if(allLootCollected())
-				endGame();
+			if(allLootCollected() && allPackagesCollected())
+				changelevel();
 		}
 		
 		//~~~~~~~LEVEL TWO~~~~~~~~~~~~~~~~~
@@ -341,8 +338,8 @@ public class GamePanel extends JPanel
 	
     //checks that pirates stole all packages
 	public boolean allPackagesStolen(){
-		for(int i=0; i < mailPackages.length; i++){
-			if(!mailPackages[i].collected())
+		for(int i=0; i < pirates.length; i++){
+			if(!pirates[i].allPackagesStolen())
 				return false;
 		}
 
@@ -352,6 +349,15 @@ public class GamePanel extends JPanel
     //checks that ninja collected all loot
 	public boolean allLootCollected(){
 		return loot1.collected() && loot2.collected();
+	}
+
+	//checks that ninja collected all packages
+	public boolean allPackagesCollected(){
+        for(int i=0; i < pirates.length; i++){
+			if(!pirates[i].allPackagesCollected())
+			 return false;
+		}
+		return true;
 	}
 
 
@@ -383,6 +389,10 @@ public class GamePanel extends JPanel
 			}
 		}
 		System.out.println("Without Mail: " + withoutmail + "  WithMail" + withmail);
+	}
 	    
+
+	public void updateScore(int i){
+		scorePanel.update(i);
 	}
 }
