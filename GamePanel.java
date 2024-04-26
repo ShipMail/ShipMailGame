@@ -38,16 +38,15 @@ public class GamePanel extends JPanel
 	ArrayList <Mailbox> mailboxes = new ArrayList<>();
 
 
-
 	private Random random;
 	private ScorePanel scorePanel;
-	private static double countdown = 1.50;
+	private static double countdown = 90000.0;
 	private long startTime;
 	private long elapsedTime;
 
 	
 	private double timeRemaining;
-	int b;
+    int b;
 	int temp;
 
 
@@ -64,7 +63,7 @@ public class GamePanel extends JPanel
 		height = 500;
 
 		gameThread = null;
-		level = 2;
+		level = 1;
 	
 		random = new Random();
 		this.scorePanel = scorePanel;
@@ -98,7 +97,6 @@ public class GamePanel extends JPanel
 		dog = new Dog();
 		crow = new Crow(this);
 		mailman = new Mailman(this,floor,dog,crow);
-		
 
 		//0 = No mail 1 = Mail
 		mailboxes.add(new Mailbox(this, 0, background2,-220,mailman));
@@ -111,8 +109,6 @@ public class GamePanel extends JPanel
 			allocateMailBox(mailbox);
 		}
 
-
-		
 	}
 
 
@@ -123,10 +119,21 @@ public class GamePanel extends JPanel
 				if (!isPaused)
 					gameUpdate();
 				gameRender();
-				scorePanel.ScoreRender();
-				if(countdown > 0){
+
+				if(level == 1){
+					scorePanel.setNumPackagesCollected(pirates[0].getNumPackagesCollected());
+					scorePanel.ScoreRender(); 
+				}
+				
+				if(level == 2){
+					scorePanel.setNumPackagesCollected(pirates[0].getNumPackagesCollected()-withmail); //replace 0 with the number of packages delivered, which is initially 0
+					scorePanel.ScoreRender(); 
+				}
+				
+				if(countdown > 0 && !isPaused){
 					elapsedTime = System.currentTimeMillis() - startTime;
-					timeRemaining = countdown - (elapsedTime/1000.0/60.0);
+					timeRemaining = (countdown - elapsedTime)/1000;
+					System.out.println(timeRemaining);
 					scorePanel.updateTimer(timeRemaining);
 				}
 
@@ -175,7 +182,7 @@ public class GamePanel extends JPanel
 		if(level == 1)
 			ninja.move(direction);
 
-		else if(level == 2){
+			else if(level == 2){
 				if (background != null && mailman != null ) {
 					
 					int mailManMovement = background2.move(direction);
@@ -225,23 +232,30 @@ public class GamePanel extends JPanel
 				}
 			}
 
+			//ninja can collect and save the packages to be shipped to mailman once all pirates are dead
+			if(allPiratesDead()){
+				for(int i=0; i < pirates.length; i++){
+					pirates[i].collectPackages();
+				}
+			}
+
 			for(int i=0; i < mailPackages.length; i++){
 				if(mailPackages[i] != null){
 					mailPackages[i].draw(imageContext);
 				}
 			}
 
-			//end game when pirates steal all packages or ninja collects all loot
+			//end game when pirates kills ninja and steals all packages
 			if(allPackagesStolen())
 				endGame();
 
+		    //move to level 2 when ninja collects all packages (to be shipped to mailman) and loot
 			if(allLootCollected() && allPackagesCollected())
 				changelevel();
 		}
 		
 		//~~~~~~~LEVEL TWO~~~~~~~~~~~~~~~~~
 		else if(level == 2){
-			
 			background2.draw(imageContext);
 			crow.draw(imageContext);
 			for(Mailbox mailbox: mailboxes){
@@ -272,9 +286,21 @@ public class GamePanel extends JPanel
 	public void changelevel(){
 		if(level == 1){
 			level = 2;
+			startTime = System.currentTimeMillis(); //reset start time
+			scorePanel.setLevel(level); 
+
+			soundManager.stopClip("battle");
+			soundManager.setVolume("background2", 0.7f);
+		    soundManager.playClip("background2",true);
 		}
 		else if(level == 2){
 			level = 1;
+			startTime = System.currentTimeMillis();
+			scorePanel.setLevel(level);
+
+			soundManager.stopClip("background2");
+			soundManager.setVolume("battle", 0.7f);
+		    soundManager.playClip("battle",true);
 		}
 	}
 
@@ -282,13 +308,56 @@ public class GamePanel extends JPanel
 	public void startGame() {				// initialise and start the game thread 
 
 		if (gameThread == null) {
-			//soundManager.playClip ("background", true);
 			createGameEntities();
 			gameThread = new Thread (this);			
 			gameThread.start();
 			startTime = System.currentTimeMillis();
 		}
 
+		if(level == 1){
+			soundManager.setVolume("battle", 0.7f);
+			soundManager.playClip("battle", true);
+
+			for(int i=0; i < pirates.length; i++){
+				if(pirates[i] != null){
+					pirates[i].start();
+				}
+			}
+		}
+		else if(level == 2){
+
+			soundManager.stopClip("battle");
+
+			soundManager.setVolume("background2", 0.7f);
+			soundManager.playClip("background2",true);
+			if (dog != null) {
+				dog.start();
+			}
+
+			if (crow != null){
+				crow.start();
+			}
+		
+		}
+
+	}
+
+
+	public void startNewGame() {				// initialise and start a new game thread 
+
+		isPaused = false;
+		level = 1;
+		scorePanel.resetPanel(0, level);
+
+		if (gameThread == null || !isRunning) {
+			createGameEntities();
+			gameThread = new Thread (this);			
+			gameThread.start();
+			startTime = System.currentTimeMillis();
+		}
+        
+		soundManager.setVolume("battle", 0.7f);
+		soundManager.playClip("battle",true);
 		if(level == 1){
 			for(int i=0; i < pirates.length; i++){
 				if(pirates[i] != null){
@@ -307,30 +376,6 @@ public class GamePanel extends JPanel
 			}
 		
 		}
-
-	}
-
-
-	public void startNewGame() {				// initialise and start a new game thread 
-
-		isPaused = false;
-		scorePanel.resetPanel();
-		level = 1;
-
-		if (gameThread == null || !isRunning) {
-			//soundManager.playClip ("background", true);
-			createGameEntities();
-			gameThread = new Thread (this);			
-			gameThread.start();
-		}
-
-		if(level == 1){
-			for(int i=0; i < pirates.length; i++){
-				if(pirates[i] != null){
-					pirates[i].start();
-				}
-			}
-		}
 	}
 
 
@@ -345,8 +390,9 @@ public class GamePanel extends JPanel
 
 
 	public void endGame() {					// end the game thread
+		soundManager.stopClip("battle");
+		soundManager.stopClip("background2");
 		isRunning = false;
-		//soundManager.stopClip ("background");
 	}
 
 
@@ -375,10 +421,22 @@ public class GamePanel extends JPanel
 		return true;
 	}
 
+    //check that all pirates are dead before ninja tries to collect packages
+	public boolean allPiratesDead(){ 
+
+		for(int i=0; i < pirates.length; i++){
+			if(!pirates[i].checkLife()){
+				return false;
+			}
+		}
+		return true;
+	}
+
 
 	public int getLevel(){
 		return level;
 	}
+
 
 	public void allocateMailBox(Mailbox mailbox){
 		int choice = (int)(Math.random() * 2); // 0 - 1
@@ -409,15 +467,16 @@ public class GamePanel extends JPanel
 		for(Mailbox mailbox : mailboxes){
 			boolean collision2 = mailbox.collidesWithMailman();
 			if(collision2 && mailbox.getDeliveryStatus() == 1){
-				soundManager.playClip("delivered", false);
 				mailbox.setDeliveryStatus(0);
 				mailbox.loadImage(0);
 				scorePanel.update(3);
+				withmail--;
 				System.out.println("Delivery Status: " + mailbox.getDeliveryStatus() + " Collsion");
+				soundManager.playClip("delivered", false);
 			}
 		 }
 	}
-	    
+
 
 	public void updateScore(int i){
 		scorePanel.update(i);
