@@ -68,6 +68,9 @@ public class Crow implements Motion {
 
       		if (!panel.isVisible ()) return;
 			  animation.update();
+
+			if(!animation.isStillActive())
+				animation.start();
      
       		x += dx;
 
