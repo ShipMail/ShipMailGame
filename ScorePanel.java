@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JLabel;
@@ -13,11 +14,13 @@ import javax.swing.JTextField;
 
 public class ScorePanel extends JPanel {
     // Label Declaration
+    private JLabel levelLabel;
     private JLabel moneyLabel;
     private JLabel packagesLabel;
     private JLabel timerLabel;
 
     //TextField Declaration
+    private JTextField levelField;
     private JTextField moneyField;
     private JTextField timerField;
 
@@ -44,6 +47,7 @@ public class ScorePanel extends JPanel {
     private BufferedImage delivered2;
     private BufferedImage delivered3;
     private BufferedImage image;
+    Color timerFieldBg;
 
     public ScorePanel(int level){
         this.level = level;
@@ -57,10 +61,10 @@ public class ScorePanel extends JPanel {
         packages = 0;
         timer = 1.50;
         width = 100;
-        height = 100;
+        height = 105;
 
         //!!!!!!!!!!CHANGE TO SUIT LEVEL TESTING!!!!!!!!!!///
-        level = 2;
+        level = 1;
 
         //Loading Images
         image = new BufferedImage (width, height, BufferedImage.TYPE_INT_RGB);
@@ -75,27 +79,34 @@ public class ScorePanel extends JPanel {
         delivered3 = ImageManager.loadBufferedImage("images/3delivered.png");
 
         //Initialize Labels
+        levelLabel = new JLabel("Level:");
         moneyLabel = new JLabel("Bank Balance:");
         packagesLabel = new JLabel("Packages Collected:");
         timerLabel = new JLabel("Count Down");
 
         //Intialize Textfield
+        levelField = new JTextField(5);
         moneyField  = new JTextField(25);
         timerField = new JTextField(25);
 
+        levelField.setEditable(false);
         moneyField.setEditable(false);
         timerField.setEditable(false);
 
         color = new Color(186, 205, 146);
         moneyField.setBackground(color);
 
+        levelField.setText(level + "");
         moneyField.setText("0");
-        timerField.setText("1.50");
+        timerField.setText("1:30");
+        timerFieldBg = timerField.getBackground();
     }
 
     public void createPanel(){
-        gridLayout = new GridLayout(3,2);
+        gridLayout = new GridLayout(4,2);
         this.setLayout(gridLayout);
+        this.add(levelLabel);
+        this.add(levelField);
         this.add(timerLabel);
         this.add(timerField);
         this.add(moneyLabel);
@@ -118,38 +129,53 @@ public class ScorePanel extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         g2.drawImage(coin,160,35,40,40, null );
 
+        //draw the number of packages ninja collected to score panel
         if(level == 1){
+            levelField.setText(level + "");
+
             if(packages == 1){
-                g2.drawImage(collected1,190,73,90,30, null);
+                g2.drawImage(collected1,195,81,90,20, null);
             }
             else if(packages == 2){
-                g2.drawImage(collected2,190,70,178,38, null);
+                g2.drawImage(collected2,195,77,178,28, null);
             }
             else if(packages == 3){
-                g2.drawImage(collected3,190,70,185,45, null);
+                g2.drawImage(collected3,195,77,185,35, null);
+            }
+            else{
+                Rectangle2D.Double rect = new Rectangle2D.Double(192, 82, 185, 45);
+                g2.setColor(color);
+                g2.fill(rect);
             }
         }
         
         if(level == 2){
-        packagesLabel.setText("Undelivered Packages");
-        if(packages == 0){
-            g2.drawImage(delivered0,190,70,185,45, null );
+            packagesLabel.setText("Undelivered Packages");
+            levelField.setText(level + "");
+
+            //erase previous image
+            Rectangle2D.Double rect = new Rectangle2D.Double(190, 82, 185, 45);
+            g2.setColor(color);
+            g2.fill(rect);
+
+            if(packages == 0){
+                g2.drawImage(delivered0,195,78,185,35, null );
+            }
+            else if(packages == 1){
+                g2.drawImage(delivered1,198,78,185,35, null );
+            }
+            else if(packages == 2){
+                g2.drawImage(delivered2,195,80,185,33, null );
+            }
+            else if(packages == 3){
+                g2.drawImage(delivered3,195,80,185,33, null );
+            }
         }
-        else if(packages == 1){
-            g2.drawImage(delivered1,193,70,185,45, null );
-        }
-        else if(packages == 2){
-            g2.drawImage(delivered2,190,70,185,45, null );
-        }
-        else if(packages == 3){
-            g2.drawImage(delivered3,190,70,185,45, null );
-        }
-    }
         g.dispose();
     }
 
     public void update(int i){
-        //if the dog causes the mailman to damage the package (Dog collides with Mailman)
+        //if the dog causes the mailman to damage the package (Dog collodes with Mailman)
         if(i == 1){
             money = money - 2.50;
             moneyS = String.valueOf(money);
@@ -172,30 +198,38 @@ public class ScorePanel extends JPanel {
             if(packages <3){
                 packages++;
             }
+        }
+
         //if the crow causes the mailman to damage the package (Crow collides with Mailman)
         else if(i == 4){
             money = money - 1.50;
             moneyS = String.valueOf(money);
             moneyField.setText(moneyS);
         }
-        }
     }
 
     public void updateTimer(double time){
-        if( time > 0.00){
-           
-            timerS = String.format("%.2f",time);
-             timerField.setText(timerS);
+        if(time > 0.00){
+           timerField.setBackground(timerFieldBg); //reset colour of timer text field when new game starts
+           double min = (time / 60);
+           double secs = (min - (int)min)*60;
+
+           if(secs < 9.5)
+                timerS = (int)min + ":0" + String.format("%.0f", secs);
+           else
+                timerS = (int)min + ":" + String.format("%.0f", secs);
+
+           timerField.setText(timerS);
         }else {
             timerField.setBackground(Color.RED);
             timerField.setText("TIME'S UP");
         }
     }
 
-    public void setL2Panel(){
+    public void setL2Panel(int numPackages){
         level = 2;
 
-        packages = 0;
+        packages = numPackages;
 
 
         timer = 1.50;
@@ -203,18 +237,31 @@ public class ScorePanel extends JPanel {
         timerField.setText(timerS);
     }
     
-    public void resetPanel(){
+    public void resetPanel(int numPackages, int level){
         money = 0;
         moneyS = String.valueOf(money);
         moneyField.setText(moneyS);
 
+        setLevel(level);
+        setNumPackagesCollected(numPackages);
 
-        packages = 0;
 
+        //timer = 1.50;
+        //timerS = String.valueOf(timer);
+        timerField.setText("1:30");
+    }
 
-        timer = 1.50;
-        timerS = String.valueOf(timer);
-        timerField.setText(timerS);
+    public void setNumPackagesCollected(int numPackagesCollected){
+        this.packages = numPackagesCollected;
+    }
+
+    public void setNumPackagesDelivered(int numPackagesDelivered){
+        this.packages = numPackagesDelivered;
+    }
+
+    public void setLevel(int level){
+        this.level = level;
     }
 
 }
+
