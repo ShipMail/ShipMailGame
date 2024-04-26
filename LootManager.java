@@ -13,8 +13,10 @@ public class LootManager implements ImageFX {
     private int height;
 
     private BufferedImage copy;			// copy of image
+    private SoundManager soundManager;
     int time, timeChange;				// to control when the image is grayed
 	  int alpha, alphaChange;				// alpha value (for alpha transparency byte)
+    
 
 
     private BufferedImage coin;
@@ -36,6 +38,7 @@ public class LootManager implements ImageFX {
       y = yPos;
 
       ninjaAnimationManager = ninja;
+      soundManager = SoundManager.getInstance();
 
       width = 50;
       height = 50;
@@ -135,9 +138,7 @@ public class LootManager implements ImageFX {
         if(collidesWithNinja(ninjaAnimationManager) && alpha > 50)
         {
             alpha = alpha - alphaChange;
-
-		    //if (alpha < 10)			
-			//    alpha = 255;
+            soundManager.playClip("coincollect", false);
         }
 		
 	}
