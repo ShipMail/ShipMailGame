@@ -22,6 +22,7 @@ public class Mailman {
 	private int rightClick;
  
 	private Dog dog;
+	private Crow crow;
 	private Image mailmanImage;
 	
 	private Image mmLeftImage1;
@@ -38,6 +39,8 @@ public class Mailman {
 	private Image mmRightImage4;
 	private Image mmRightImage5;
 	private Image mmRightImage6;
+
+	private Image mmBodoom;
 	
 	private boolean jumping;
 	private boolean falling;
@@ -48,7 +51,7 @@ public class Mailman {
 
 	private HashSet directions;
 
-	public Mailman (JPanel p, Floor floor, Dog dog) {
+	public Mailman (JPanel p, Floor floor, Dog dog, Crow crow) {
 		panel = p;
 		directions = new HashSet<>(3);
 		leftClick = 0;
@@ -63,6 +66,7 @@ public class Mailman {
 		width = 80;
 		height = 100;
 		this.dog = dog;
+		this.crow = crow;
 		this.floor = floor;
 		jumping = false;
 		falling = false;
@@ -81,6 +85,7 @@ public class Mailman {
 		mmRightImage5 = ImageManager.loadImage ("images/mailman_walkright5.png");
 		mmRightImage6 = ImageManager.loadImage ("images/mailman_walkright6.png");
 
+		mmBodoom = ImageManager.loadImage("images/mailman_bodoom.png");
 		mailmanImage = mmRightImage1;
 	}
 
@@ -181,7 +186,7 @@ public class Mailman {
 			}
 			
 			else
-				return 2;		// bat can't move right, let background scroll
+				return 2;		// mailman can't move right, let background scroll
 		}
 		else if(direction == 5 && !jumping){
 				jump();
@@ -255,10 +260,10 @@ public class Mailman {
 			directions.add(Integer.valueOf(2));
 		else if(direction == 2 && directions.contains(Integer.valueOf(2)))	//already moved right so can move left (back to centre)
 			directions.add(Integer.valueOf(1));
-		else if(direction == 3 && directions.contains(Integer.valueOf(3)))	//already moved up so can move down (back to centre)
+		/*else if(direction == 3 && directions.contains(Integer.valueOf(3)))	//already moved up so can move down (back to centre)
 			directions.add(Integer.valueOf(4));
 		else if(direction == 4 && directions.contains(Integer.valueOf(4)))	//already moved down so can move up (back to centre)
-			directions.add(Integer.valueOf(3));
+			directions.add(Integer.valueOf(3));*/
 		
 		if(direction > 0){				// new direction the bat can move in
 			directions.add(Integer.valueOf(direction));
@@ -285,8 +290,23 @@ public class Mailman {
 
 		return mailmanRect.intersects(dogRect);
 	}
+	public boolean collidesWithCrow(){
+		Rectangle2D.Double mailmanRect = getBoundingRectangle();
+		Rectangle2D.Double crowRect = crow.getBoundingRectangle();
+
+		return mailmanRect.intersects(crowRect);
+	}
+
 
 	public int getMailman(){
 		return x;
+	}
+
+	public void setMailman(){
+       x = 190;
+	}
+
+	public void setFall(){
+		mailmanImage = mmBodoom;
 	}
 }

@@ -34,6 +34,7 @@ public class GamePanel extends JPanel
 	private Floor floor;
 	private Mailman mailman;
 	private Dog dog;
+	private Crow crow;
 	ArrayList <Mailbox> mailboxes = new ArrayList<>();
 
 
@@ -95,7 +96,10 @@ public class GamePanel extends JPanel
 
 		floor = new Floor(this);
 		dog = new Dog();
-		mailman = new Mailman(this,floor,dog);
+		crow = new Crow(this);
+		mailman = new Mailman(this,floor,dog,crow);
+		
+
 		//0 = No mail 1 = Mail
 		mailboxes.add(new Mailbox(this, 0, background2,-220,mailman));
 		mailboxes.add(new Mailbox(this,1,background2, 20,mailman));
@@ -143,19 +147,20 @@ public class GamePanel extends JPanel
 		}
 
 		if(level == 2){
+			
 			mailman.update();
+			crow.update();
+			boolean collisionC = mailman.collidesWithCrow();
+			if(collisionC){
+				System.out.println("Crow");
+			}
 			dog.update();
 			boolean collision = mailman.collidesWithDog();
 		 if(collision){
+			mailman.setFall();
 			scorePanel.update(1);
 		 }
 
-		/*  for(Mailbox mailbox : mailboxes){
-			boolean collision2 = mailbox.collidesWithMailman();
-			if(collision2){
-				System.out.println("Delivery Status: " + mailbox.getDeliveryStatus() + " Collsion");
-			}
-		 }*/
 		}
 	}
 
@@ -234,7 +239,9 @@ public class GamePanel extends JPanel
 		
 		//~~~~~~~LEVEL TWO~~~~~~~~~~~~~~~~~
 		else if(level == 2){
+			
 			background2.draw(imageContext);
+			crow.draw(imageContext);
 			for(Mailbox mailbox: mailboxes){
 				mailbox.draw(imageContext);
 			}
@@ -290,6 +297,9 @@ public class GamePanel extends JPanel
 		else if(level == 2){
 			if (dog != null) {
 				dog.start();
+			}
+			if (crow != null){
+				crow.start();
 			}
 		}
 
