@@ -7,7 +7,7 @@ import java.awt.Graphics2D;
 
 public class NinjaAnimationManager {
 
-    Animation animation;
+    Animation animation; //stores current animation
     Animation animation1; //right front flip
     Animation animation2; //move right
     Animation animation3; //right sword strike
@@ -29,11 +29,11 @@ public class NinjaAnimationManager {
 	private int dy;		// increment to move along y-axis
     private boolean dead = false;
 
-    int numAnim1Frames = 5;
-    int numAnim2Frames = 3;
-    int numAnim3Frames = 4;
-    int numAnim4Frames = 4;
-    int numAnim5Frames = 1;
+    int numAnim1Frames = 5; //right front flip
+    int numAnim2Frames = 3; //move right
+    int numAnim3Frames = 4; //right sword strike
+    int numAnim4Frames = 4; //right sword chop
+    int numAnim5Frames = 1; //move left
     int numAnim6Frames = 4; //left sword strike
     int numAnim7Frames = 4; //left sword chop
     int numAnim8Frames = 5; //left front flip
@@ -47,19 +47,27 @@ public class NinjaAnimationManager {
     Rectangle2D.Double[] anim7HitBoxes;
     Rectangle2D.Double[] anim8HitBoxes;
 
+    //right front flip
     Image animImage0;
     Image animImage1;
     Image animImage2;
     Image animImage3;
     Image animImage4;
+
+    //right sword strike
     Image animImage5;
     Image animImage6;
     Image animImage7;
     Image animImage8;
+    
+    //right sword chop
     Image animImage9;
     Image animImage10;
     Image animImage11;
     Image animImage12;
+
+    //animImage5, animImage9 and animImage13 are used for the animation to move right 
+
     Image animImage13;
     Image animImage14;
     Image animImage15;
@@ -103,24 +111,23 @@ public class NinjaAnimationManager {
         panel = p;
 
         //create animation objects
-        animation1 = new Animation(false);	// loop continuously
-        animation2 = new Animation(true);	// loop continuously
-        animation3 = new Animation(false);	// loop continuously
-        animation4 = new Animation(false);	// loop continuously
-        animation5 = new Animation(true);	// loop continuously
-        animation6 = new Animation(false);	// loop continuously
-        animation7 = new Animation(false);	// loop continuously
-        animation8 = new Animation(false);	// loop continuously
+        animation1 = new Animation(false);	
+        animation2 = new Animation(true);	
+        animation3 = new Animation(false);	
+        animation4 = new Animation(false);	
+        animation5 = new Animation(true);
+        animation6 = new Animation(false);	
+        animation7 = new Animation(false);	
+        animation8 = new Animation(false);	
         fall = new AffineTransform();
 
         dx = 5;	// increment to move along x-axis
-        dy = 5;		// increment to move along y-axis
+        dy = 5;	// increment to move along y-axis
         x = 500;
         y = 400;
 
         // load images for animations
 
-        //animation 1
         animImage0 = ImageManager.loadImage("images/ninja0.png");
         animImage1 = ImageManager.loadImage("images/ninja1.png");
 		animImage2 = ImageManager.loadImage("images/ninja2.png");
@@ -345,13 +352,6 @@ public class NinjaAnimationManager {
                 animation.update();
 
         }
-		
-
-		//x = x + dx;
-		//y = y + dy;
-
-		//if (x > 400)
-			//x = 5;
 	}
 
 
@@ -496,11 +496,12 @@ public class NinjaAnimationManager {
             width = animation.getImage().getWidth(null);
             height = animation.getImage().getHeight(null);
 
+            soundManager.playClip("scream", false);
+
             fall.translate(0, height); // Translate to position the sprite correctly on the screen
             fall.rotate(Math.toRadians(-90), x + width / 2, y + height / 2); // Rotate by -90 degrees (to fall backwards)
 
             dead = killed;
-            soundManager.playClip("ninjascream", false);
         }
 
     }
