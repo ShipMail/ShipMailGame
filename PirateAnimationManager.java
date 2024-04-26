@@ -43,7 +43,9 @@ public class PirateAnimationManager {
 
 	private int dx;		// increment to move along x-axis
 	private int dy;		// increment to move along y-axis
+    private int numPackagesCollected;
 
+    SoundManager soundManager;
     Animation currentAnimation;
     AffineTransform fall;
     GamePanel panel;
@@ -61,10 +63,13 @@ public class PirateAnimationManager {
         x = xPos;
         y = yPos;
         this.type = type;
+        numPackagesCollected = 0;
+        collected = false;
 
         ninjaAnimationManager = ninja;
         lootManager = loot;
         this.mailPackages = mailPackages;
+        soundManager = SoundManager.getInstance();
 
         animation = new Animation(true);
 
@@ -182,6 +187,10 @@ public class PirateAnimationManager {
             if(!ninjaAnimationManager.isAttacking()){
                 currentAnimation = animation2;
                 currentAnimation.start();
+
+                soundManager.playClip("arr", false);
+                soundManager.playClip("swing", false);
+
                 ninjaAnimationManager.killNinja(true);
             }
         }
@@ -191,6 +200,10 @@ public class PirateAnimationManager {
             if(!ninjaAnimationManager.isAttacking()){
                 currentAnimation = animation3;
                 currentAnimation.start();
+
+                soundManager.playClip("arr", false);
+                soundManager.playClip("swing", false);
+
                 ninjaAnimationManager.killNinja(true);
             }
         }
@@ -206,24 +219,31 @@ public class PirateAnimationManager {
             currentAnimation.start();
         }
 
-        //stop the animation if the ninja strikes the pirate
+        //stop the pirate animation if the ninja is in an attacking stance and collides with the pirate
         if(ninjaAnimationManager.isAttacking() && collidesWithNinja(ninjaAnimationManager) && !dead){
             currentAnimation.stop();
+
+            soundManager.playClip("scream", false);
 
             width = currentAnimation.getImage().getWidth(null);
             height = currentAnimation.getImage().getHeight(null);
 
-            fall.translate(0, height); // Translate to position the sprite correctly on the screen
+            if(width > height)
+                fall.translate(0, width+dy); // Translate to position the sprite correctly on the screen
+            else
+                fall.translate(0, height+dy); // Translate to position the sprite correctly on the screen
+            
             fall.rotate(Math.toRadians(-90), x + width / 2, y + height / 2); // Rotate by -90 degrees (to fall backwards)
             
             dead = true;
+            soundManager.playClip("lootdrop", false);
         }
         
         if(!dead){   
             currentAnimation.update();
-            stealPackages();
+            stealPackages(); //pirate can steal packages when they are alive and the ninja is dead
         }
-        collectPackages();
+
 
         if (!currentAnimation.isStillActive()){
             return;
@@ -268,7 +288,11 @@ public class PirateAnimationManager {
                 }
             }
           }
+
+          if(collected)
+            soundManager.playClip("coincollect", false);
       }
+      
     }
 
     //pirates get closer to packages to steal them
@@ -294,6 +318,16 @@ public class PirateAnimationManager {
                 }  
             } 
         }
+    }
+
+
+    public int getNumPackagesCollected(){
+        numPackagesCollected = 0;
+        for(int i=0; i < mailPackages.length; i++){
+            if(mailPackages[i].collected())
+              numPackagesCollected++;
+        }
+        return numPackagesCollected;
     }
 
 
@@ -454,7 +488,7 @@ public class PirateAnimationManager {
     }
 
 
-
+    //check if pirate is dead
     public boolean checkLife(){
         return dead;
     }
