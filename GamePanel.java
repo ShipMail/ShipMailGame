@@ -152,11 +152,13 @@ public class GamePanel extends JPanel
 			crow.update();
 			boolean collisionC = mailman.collidesWithCrow();
 			if(collisionC){
-				System.out.println("Crow");
+				soundManager.playClip("crow",false);
+				scorePanel.update(4);
 			}
 			dog.update();
 			boolean collision = mailman.collidesWithDog();
 		 if(collision){
+			soundManager.playClip("dog",false);
 			mailman.setFall();
 			scorePanel.update(1);
 		 }
@@ -295,12 +297,15 @@ public class GamePanel extends JPanel
 			}
 		}
 		else if(level == 2){
+			soundManager.setVolume("background2", 0.7f);
+			soundManager.playClip("background2",true);
 			if (dog != null) {
 				dog.start();
 			}
 			if (crow != null){
 				crow.start();
 			}
+		
 		}
 
 	}
@@ -404,6 +409,7 @@ public class GamePanel extends JPanel
 		for(Mailbox mailbox : mailboxes){
 			boolean collision2 = mailbox.collidesWithMailman();
 			if(collision2 && mailbox.getDeliveryStatus() == 1){
+				soundManager.playClip("delivered", false);
 				mailbox.setDeliveryStatus(0);
 				mailbox.loadImage(0);
 				scorePanel.update(3);

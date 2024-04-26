@@ -14,16 +14,23 @@ public class SoundManager {
         clips = new HashMap <String, Clip>();
 
         //Load Sounds 
-        /* 
-
-         //Loads Clip 1 - Background Sound
-        Clip clip = loadClip("background.wav");
-        clips.put("background", clip);
-
-         //Loads Clip 2 - Background Sound
-        clip = loadClip("DogBark.wav");
-        clips.put("DogBark", clip);
         
+      
+        
+        Clip clip = loadClip("sounds/dog.wav");
+        clips.put("dog", clip);
+
+        clip = loadClip("sounds/crow.wav");
+        clips.put("crow", clip);
+
+        clip = loadClip("sounds/delivered.wav");
+        clips.put("delivered", clip);
+
+        clip = loadClip("sounds/MI.wav");
+        clips.put("background2", clip);
+
+
+       /* 
         clip = loadClip("sounds/ninja-scream.wav");	
 	clips.put("ninjascream", clip);
 
