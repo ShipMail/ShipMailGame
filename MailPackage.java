@@ -68,8 +68,7 @@ public class MailPackage {
   
       copy.setRGB(0, 0, imWidth, imHeight, pixels, 0, imWidth);	
 
-      if(ninjaAnimationManager.isDead())
-        g2.drawImage(copy, x, y, width, height, null);
+      g2.drawImage(copy, x, y, width, height, null);
     }
 
 
@@ -93,7 +92,7 @@ public class MailPackage {
         }
 
         //if(alpha == 0)
-          //  alpha = 255;
+        //    alpha = 255;
 		
 	}
 
