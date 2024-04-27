@@ -28,6 +28,12 @@ public class SoundManager {				// a Singleton class
         clips.put("background2", clip);
 
 
+        clip = loadClip("sounds/win.wav");
+        clips.put("win", clip);
+
+		clip = loadClip("sounds/lose.wav");
+        clips.put("lose", clip);
+
 		clip = loadClip("sounds/battle-ship.wav"); // played during level 1
 		clips.put("battle", clip);
 

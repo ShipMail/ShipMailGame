@@ -98,7 +98,7 @@ public class ScorePanel extends JPanel {
 
         levelField.setText(level + "");
         moneyField.setText("0");
-        timerField.setText("1:30");
+        timerField.setText("READY?");
         timerFieldBg = timerField.getBackground();
     }
 
@@ -127,7 +127,7 @@ public class ScorePanel extends JPanel {
 
         Graphics g = getGraphics ();
         Graphics2D g2 = (Graphics2D) g;
-        g2.drawImage(coin,160,35,40,40, null );
+        g2.drawImage(coin,160,48,40,40, null );
 
         //draw the number of packages ninja collected to score panel
         if(level == 1){
@@ -248,7 +248,7 @@ public class ScorePanel extends JPanel {
 
         //timer = 1.50;
         //timerS = String.valueOf(timer);
-        timerField.setText("1:30");
+        timerField.setText("GET DELIVERING");
     }
 
     public void setNumPackagesCollected(int numPackagesCollected){
@@ -261,6 +261,10 @@ public class ScorePanel extends JPanel {
 
     public void setLevel(int level){
         this.level = level;
+    }
+
+    public int getPackages(){
+        return packages;
     }
 
 }

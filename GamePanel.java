@@ -18,8 +18,10 @@ public class GamePanel extends JPanel
 	private boolean isPaused;
 	private Thread gameThread;
 	private BufferedImage image;
+	private BufferedImage winner;
 	public Background background;
 	public Backgroundd background2;
+	
 
 	private int level;
 	private int width;
@@ -40,7 +42,7 @@ public class GamePanel extends JPanel
 
 	private Random random;
 	private ScorePanel scorePanel;
-	private static double countdown = 90000.0;
+	private static double countdown = 60000.0;
 	private long startTime;
 	private long elapsedTime;
 
@@ -69,6 +71,8 @@ public class GamePanel extends JPanel
 		this.scorePanel = scorePanel;
         
 		image = new BufferedImage (width, height, BufferedImage.TYPE_INT_RGB);
+		winner = ImageManager.loadBufferedImage("images/Winner.png");
+
 	}
 
 
@@ -135,6 +139,11 @@ public class GamePanel extends JPanel
 					timeRemaining = (countdown - elapsedTime)/1000;
 					System.out.println(timeRemaining);
 					scorePanel.updateTimer(timeRemaining);
+				}
+				if (timeRemaining<= 0){
+					soundManager.stopClip("battle");
+					soundManager.playClip("lose",false);
+					endGame();
 				}
 
 				Thread.sleep (50);	
@@ -252,10 +261,18 @@ public class GamePanel extends JPanel
 		    //move to level 2 when ninja collects all packages (to be shipped to mailman) and loot
 			if(allLootCollected() && allPackagesCollected())
 				changelevel();
+				if (dog != null) {
+					dog.start();
+				}
 		}
 		
 		//~~~~~~~LEVEL TWO~~~~~~~~~~~~~~~~~
 		else if(level == 2){
+			if(scorePanel.getPackages() == 3){
+				soundManager.playClip("win",false);
+				endGame();
+			}
+
 			background2.draw(imageContext);
 			crow.draw(imageContext);
 			for(Mailbox mailbox: mailboxes){
@@ -269,7 +286,7 @@ public class GamePanel extends JPanel
 			}
 
 			if (dog != null) {
-				dog.draw (imageContext);
+				dog.draw(imageContext);
 			}
 		}
 		
@@ -297,7 +314,7 @@ public class GamePanel extends JPanel
 			level = 1;
 			startTime = System.currentTimeMillis();
 			scorePanel.setLevel(level);
-
+			
 			soundManager.stopClip("background2");
 			soundManager.setVolume("battle", 0.7f);
 		    soundManager.playClip("battle",true);
@@ -365,6 +382,7 @@ public class GamePanel extends JPanel
 				}
 			}
 		}
+		
 		else if(level == 2){
 			soundManager.setVolume("background2", 0.7f);
 			soundManager.playClip("background2",true);

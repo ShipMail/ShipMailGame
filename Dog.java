@@ -5,10 +5,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 
-/**
-    The CatAnimation class creates a wild cat animation containing
-    eight frames. 
-*/
 public class Dog {
 	
 	Animation animation;
@@ -31,7 +27,7 @@ public class Dog {
         	dx = 10;		// increment to move along x-axis
         	dy = 0;		// increment to move along y-axis
 
-		// load images for wild cat animation
+		
 
 		Image animImage1 = ImageManager.loadImage("images/dog_right1.png");
 		Image animImage2 = ImageManager.loadImage("images/dog_right2.png");
@@ -42,7 +38,7 @@ public class Dog {
 		Image animImage7 = ImageManager.loadImage("images/dog_right7.png");
 		Image animImage8 = ImageManager.loadImage("images/dog_right8.png");
 	
-		// create animation object and insert frames
+		
 
 		animation.addFrame(animImage1, 80);
 		animation.addFrame(animImage2, 80);
