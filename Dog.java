@@ -53,7 +53,7 @@ public class Dog {
 
 
 	public void start() {
-		x = 5;
+		x = 300;
         	y = 400;
 		animation.start();
 	}

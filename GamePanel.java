@@ -259,7 +259,7 @@ public class GamePanel extends JPanel
 			}
 
 			//end game when pirates kills ninja and steals all packages
-			if(allPackagesStolen()){
+			if(allPackagesStolen() || (ninja.isDead() && !allPiratesDead())){
 			    soundManager.stopClip("battle");
 			    soundManager.playClip("lose",false);
 				endGame();
