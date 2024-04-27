@@ -55,10 +55,10 @@ public class PirateAnimationManager {
     boolean collected = false;
 
 
-    public PirateAnimationManager(GamePanel p, int xPos, int yPos, String type, NinjaAnimationManager ninja, LootManager loot, MailPackage[] mailPackages) {
+    public PirateAnimationManager(GamePanel p, int xPos, int yPos, int dx, String type, NinjaAnimationManager ninja, LootManager loot, MailPackage[] mailPackages) {
 
         panel = p;
-        dx = 10;		// increment to move along x-axis
+        this.dx = dx;		// increment to move along x-axis
         dy = 5;	// increment to move along y-axis
         x = xPos;
         y = yPos;
@@ -254,7 +254,7 @@ public class PirateAnimationManager {
         else 
             x = x - dx;
 
-        if(x == 850){
+        if(x >= 850){
             dx = dx * -1;
             currentAnimation = animation;
 
@@ -263,7 +263,7 @@ public class PirateAnimationManager {
             }
         }
 
-        else if(x < 0){
+        else if(x <= 0){
             dx = dx * -1;
             currentAnimation = animation1;
 
