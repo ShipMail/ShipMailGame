@@ -26,7 +26,7 @@ public class GamePanel extends JPanel
 	private int level;
 	private int width;
 	private int height;
-	private int withoutmail = 0, withmail = 0;
+	private int withoutmail, withmail;
 
 	private NinjaAnimationManager ninja;
 	private PirateAnimationManager[] pirates;
@@ -37,7 +37,7 @@ public class GamePanel extends JPanel
 	private Mailman mailman;
 	private Dog dog;
 	private Crow crow;
-	ArrayList <Mailbox> mailboxes = new ArrayList<>();
+	ArrayList <Mailbox> mailboxes;
 
 
 	private Random random;
@@ -102,6 +102,7 @@ public class GamePanel extends JPanel
 		crow = new Crow(this);
 		mailman = new Mailman(this,floor,dog,crow);
 
+		mailboxes = new ArrayList<>();
 		//0 = No mail 1 = Mail
 		mailboxes.add(new Mailbox(this, 0, background2,-220,mailman));
 		mailboxes.add(new Mailbox(this,1,background2, 20,mailman));
@@ -109,6 +110,9 @@ public class GamePanel extends JPanel
 		mailboxes.add(new Mailbox(this, 0, background2,650,mailman));
 		mailboxes.add(new Mailbox(this,1,background2, 950,mailman));
 		mailboxes.add(new Mailbox(this, 0, background2,1250,mailman));
+
+		withoutmail = 0; 
+		withmail = 0;
 		for(Mailbox mailbox: mailboxes){
 			allocateMailBox(mailbox);
 		}
