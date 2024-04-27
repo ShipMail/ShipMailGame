@@ -177,22 +177,23 @@ public class ScorePanel extends JPanel {
     public void update(int i){
         //if the dog causes the mailman to damage the package (Dog collodes with Mailman)
         if(i == 1){
-            money = money - 2.50;
+            money = money - 20.50;
             moneyS = String.valueOf(money);
             moneyField.setText(moneyS);
         }
-        //if the package is collected (Ninja collides with the package)
+       
+        //if the package is delivered (Mailman collides with mailbox and "D is selected")
         else if(i == 2){
-            money = money + 100;
+            money = money + 500;
             moneyS = String.valueOf(money);
             moneyField.setText(moneyS);
             if(packages <3){
                 packages++;
             }
         }
-         //if the package is delivered (Mailman collides with mailbox and "D is selected")
+          //if the package is collected (Ninja collides with the package)
         else if(i == 3){
-            money = money + 200;
+            money = money + 2000;
             moneyS = String.valueOf(money);
             moneyField.setText(moneyS);
             if(packages <3){
@@ -202,7 +203,7 @@ public class ScorePanel extends JPanel {
 
         //if the crow causes the mailman to damage the package (Crow collides with Mailman)
         else if(i == 4){
-            money = money - 1.50;
+            money = money - 10.50;
             moneyS = String.valueOf(money);
             moneyField.setText(moneyS);
         }

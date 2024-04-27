@@ -259,8 +259,11 @@ public class GamePanel extends JPanel
 			}
 
 			//end game when pirates kills ninja and steals all packages
-			if(allPackagesStolen())
+			if(allPackagesStolen()){
+			    soundManager.stopClip("battle");
+			    soundManager.playClip("lose",false);
 				endGame();
+			}
 
 		    //move to level 2 when ninja collects all packages (to be shipped to mailman) and loot
 			if(allLootCollected() && allPackagesCollected())
@@ -491,7 +494,7 @@ public class GamePanel extends JPanel
 			if(collision2 && mailbox.getDeliveryStatus() == 1){
 				mailbox.setDeliveryStatus(0);
 				mailbox.loadImage(0);
-				scorePanel.update(3);
+				scorePanel.update(2);
 				withmail--;
 				System.out.println("Delivery Status: " + mailbox.getDeliveryStatus() + " Collsion");
 				soundManager.playClip("delivered", false);
