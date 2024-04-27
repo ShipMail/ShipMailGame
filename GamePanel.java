@@ -92,8 +92,8 @@ public class GamePanel extends JPanel
 		mailPackages[2] = new MailPackage(this, random.nextInt(100, 600), 350, ninja);
 
 		pirates = new PirateAnimationManager[2];
-		pirates[0] = new PirateAnimationManager(this, 850, 320, "left", ninja, loot1, mailPackages);
-		pirates[1] = new PirateAnimationManager(this, 50, 320, "right", ninja, loot2, mailPackages);
+		pirates[0] = new PirateAnimationManager(this, 850, 320, 5, "left", ninja, loot1, mailPackages);
+		pirates[1] = new PirateAnimationManager(this, 50, 320, 15, "right", ninja, loot2, mailPackages);
 
 
 
