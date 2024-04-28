@@ -129,9 +129,10 @@ public class GamePanel extends JPanel
 				gameRender();
 
 				if(level == 1){
-
+					if(!ninja.isDead()){
 					scorePanel.setNumPackagesCollected(pirates[0].getNumPackagesCollected());
 					scorePanel.ScoreRender(); 
+					}
 				
 				}
 				
@@ -261,7 +262,7 @@ public class GamePanel extends JPanel
 			}
 
 			//end game when pirates kills ninja and steals all packages
-			if(allPackagesStolen() || (ninja.isDead() && !allPiratesDead())){
+			if(allPackagesStolen()){
 			    soundManager.stopClip("battle");
 			    soundManager.playClip("lose",false);
 				endGame();
