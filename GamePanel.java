@@ -129,8 +129,11 @@ public class GamePanel extends JPanel
 				gameRender();
 
 				if(level == 1){
+
+					if(!ninja.isDead()){
 					scorePanel.setNumPackagesCollected(pirates[0].getNumPackagesCollected());
 					scorePanel.ScoreRender(); 
+				}
 				}
 				
 				if(level == 2){
